@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "A full stack project for the clone of you tube",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "npm run start"
   },
@@ -15,6 +16,8 @@
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mongodb": "^6.16.0",
     "mongoose": "^8.13.2"
   },
   "devDependencies": {
