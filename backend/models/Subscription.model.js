@@ -18,4 +18,4 @@ const subscriptionSchema = new Schema(
 
 subscriptionSchema.index({ subscriber: 1, subscribedTo: 1 }, { unique: true });
 
-export const subscription = model("subscription", subscriptionSchema);
+export const Subscription = model("subscription", subscriptionSchema);
