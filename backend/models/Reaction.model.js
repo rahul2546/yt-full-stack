@@ -27,4 +27,4 @@ const reactionSchema = new Schema(
 
 reactionSchema.index({ user: 1, targetId: 1, targetType: 1 }, { unique: true });
 
-export const Reaction = model("reaction", reactionSchema);
+export const Reaction =  mongoose.models.reaction || model("reaction", reactionSchema);

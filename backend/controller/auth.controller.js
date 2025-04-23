@@ -91,3 +91,13 @@ export const loginUser = async (req, res, next) => {
         
     }
 };
+
+// @desc Get user profile
+// @route GET /api/auth/getProfile
+// @access Private
+
+// controllers/userController.js
+export const getProfile = (req, res) => {
+    res.status(200).json(req.user);
+  };
+  

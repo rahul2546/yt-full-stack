@@ -5,7 +5,8 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "npm run start"
+    "start": "node server.js",
+    "dev": "nodemon server.js"
   },
   "keywords": [
     "backend",

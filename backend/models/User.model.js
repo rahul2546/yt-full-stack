@@ -24,16 +24,7 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      // validate: {
-      //   validator: function (password) {
-      //     // At least 8 characters, one uppercase, one lowercase, one number, one special character
-      //     return /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/.test(
-      //       password
-      //     );
-      //   },
-      //   message: () =>
-      //     `Password must be at least 8 characters long and include uppercase, lowercase, number, and special character.`,
-      // },
+    
     },
     profileImg: {
       type: String,
@@ -43,4 +34,4 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
-export const User = mongoose.model("user", userSchema);
+export const User =  mongoose.models.user || mongoose.model("user", userSchema);
