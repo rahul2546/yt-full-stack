@@ -5,6 +5,7 @@ import connectDB from './config/db.js' // MongoDB connection
 import { notFound, errorHandler } from './middleware/error.middleware.js'; // Error handling middleware
 import authRoutes from './routes/auth.route.js'; // User authentication route
 import videoRoutes from './routes/video.routes.js'; // Video upload route
+import commentRoutes from './routes/comment.route.js'; // Comment route
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use(express.json()); // Parse JSON bodies
 //Routes
 app.use('/api/v1/auth', authRoutes); // User authentication route
 app.use('/api/v1/video', videoRoutes); // Video  route
+app.use('/api/v1/videos/:videoId/comment', commentRoutes); // Comment route
 
 //Error handling middlewares
 app.use(notFound);
