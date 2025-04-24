@@ -4,6 +4,7 @@ import cors from 'cors';
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middleware/error.middleware.js';
 import authRoutes from './routes/auth.route.js';
+import videoRoutes from './routes/video.routes.js'; // Video upload route
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use(express.json()); // Parse JSON bodies
 
 //Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/video', videoRoutes); // Video upload route
 
 //Error handling middlewares
 app.use(notFound);

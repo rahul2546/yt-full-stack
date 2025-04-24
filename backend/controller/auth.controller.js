@@ -7,6 +7,10 @@ import generateToken from '../utils/generateToken.util.js';
 // @route   POST /api/auth/register
 // @access  Public
 
+//TODO: here we have to make response and error more modular and reusable using utils APIRIResponse and APIError
+
+//TODO: we will work on the concept of Access and Refresh tokens in the future
+
 export const registerUser = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;

@@ -37,7 +37,7 @@ const videoSchema = new Schema(
     },
     duration: {
       type: Number, // duration in seconds
-      required: true,
+      // required: true, // TODO: Add this back when you have the duration calculation logic
     },
     isPublished: {
       type: Boolean,
