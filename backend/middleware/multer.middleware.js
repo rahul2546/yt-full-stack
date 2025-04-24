@@ -17,9 +17,9 @@ const storage = multer.diskStorage({
 // File type validation
 const fileFilter = (req, file, cb) => {
     const allowedVideoTypes = ["video/mp4", "video/mkv", "video/webm"];
-    const allowedImageTypes = ["image/jpeg", "image/png", "image/jpg", ];
+    const allowedImageTypes = ["image/jpeg", "image/png", "image/jpg",];
 
-    if(
+    if (
         (file.fieldname === "video" && allowedVideoTypes.includes(file.mimetype)) ||
         (file.fieldname === "thumbnail" && allowedImageTypes.includes(file.mimetype))
     ) {
@@ -33,6 +33,6 @@ export const upload = multer({
     storage,
     fileFilter,
     limits: {
-        fileSize: 150 * 1024 * 1024, // Limit file size to 150MB    
+        fileSize: 100 * 1024 * 1024, // Limit file size to 100MB    
     },
 });

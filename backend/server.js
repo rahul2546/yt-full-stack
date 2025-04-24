@@ -1,9 +1,9 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import cors from 'cors';
-import connectDB from './config/db.js'
-import { notFound, errorHandler } from './middleware/error.middleware.js';
-import authRoutes from './routes/auth.route.js';
+import express from 'express'; // Express framework
+import dotenv from 'dotenv'; // Environment variables
+import cors from 'cors'; // Cross-Origin Resource Sharing
+import connectDB from './config/db.js' // MongoDB connection
+import { notFound, errorHandler } from './middleware/error.middleware.js'; // Error handling middleware
+import authRoutes from './routes/auth.route.js'; // User authentication route
 import videoRoutes from './routes/video.routes.js'; // Video upload route
 
 dotenv.config();
@@ -23,8 +23,8 @@ app.use(express.json()); // Parse JSON bodies
 // });
 
 //Routes
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/video', videoRoutes); // Video upload route
+app.use('/api/v1/auth', authRoutes); // User authentication route
+app.use('/api/v1/video', videoRoutes); // Video  route
 
 //Error handling middlewares
 app.use(notFound);

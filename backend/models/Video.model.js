@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { Schema, model } from "mongoose";
 
+
 const videoSchema = new Schema(
   {
     title: {
@@ -28,7 +29,7 @@ const videoSchema = new Schema(
     },
     uploader: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "user",
       required: true,
     },
     tags: {
@@ -47,4 +48,4 @@ const videoSchema = new Schema(
   { timestamps: true }
 );
 
-export const Video =  mongoose.models.video || model("video", videoSchema);
+export const Video = mongoose.models.video || model("video", videoSchema);

@@ -7,9 +7,9 @@ export const uploadVideo = async (req, res, next) => {
     try {
         const { title, description } = req.body;
         const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
-        console.log("User ID:", userId); // Debugging line to check user ID
+        //  console.log("User ID:", userId); // Debugging line to check user ID
 
-        console.log(req.body, req.files);
+        // console.log(req.body, req.files);
 
         if (
             !req.files ||
@@ -20,9 +20,9 @@ export const uploadVideo = async (req, res, next) => {
         }
 
         const videoPath = req.files.video[0].path;
-        console.log(videoPath);
+        // console.log(videoPath);
         const thumbnailPath = req.files.thumbnail[0].path;
-        console.log(thumbnailPath);
+        //  console.log(thumbnailPath);
 
 
         const thumbnailResult = await uploadToCloudinary(thumbnailPath,
@@ -54,3 +54,25 @@ export const uploadVideo = async (req, res, next) => {
 
     }
 };
+
+export const getAllVideos = async (_, res, next) => {
+    try {
+        const videos = await Video.find({})
+            .populate("uploader", "username")// Populate uploader field with user details
+            .sort({ createdAt: -1 }); // Sort videos by creation date in descending order
+        //console.log(videos);
+
+        return res
+            .status(200)
+            .json(new APIResponse(200, videos, "Videos fetched successfully"));
+
+
+
+    } catch (error) {
+        next(new APIError(500, "Error fetching videos", error));
+
+        /*    console.error("Actual Error:", error); // 👈 THIS
+            return next(error); // Remove ApiError wrapper for now to see real issue
+            */
+    }
+}
