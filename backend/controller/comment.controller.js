@@ -148,3 +148,44 @@ export const dislikeComment = async (req, res, next) => {
         next(new APIError(500, error.message));
     }
 };
+
+export const replyToComment = async (req, res, next) => {
+    try {
+        const { commentId } = req.params; // Get commentId from request parameters
+
+        const { content } = req.body; // Get reply content from request body
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        if (!content) {
+            throw new APIError(400, "Content is required!");
+        }
+
+        const parentcomment = await Comment.findById(commentId);
+
+        if (!parentcomment) {
+            throw new APIError(404, "Parent Comment not found!");
+        }
+
+        // Create a new reply comment
+        const replyComment = await Comment.create({
+            content,
+            video: parentcomment.video,
+            author: userId,
+        });
+
+        // Add the reply comment to the parent comment's replies array
+        parentcomment.replies.push(replyComment._id);
+        await parentcomment.save();
+
+        // Populate the reply comment with author details
+        const populatedReplyComment = await replyComment.populate("author", "username");
+
+        return res.status(201).json(
+            new APIResponse(201, populatedReplyComment, "Reply created successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+    }
+};

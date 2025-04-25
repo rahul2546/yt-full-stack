@@ -1,6 +1,6 @@
 import express from 'express';
 
-import { createComment } from '../controller/comment.controller.js';
+import { createComment, replyToComment } from '../controller/comment.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 import { getAllCommentsForVideo, likeComment,dislikeComment } from '../controller/comment.controller.js';
 
@@ -41,6 +41,15 @@ router.patch(
     '/:commentId/dislike',
     validateUser, //🔐 protected route only registered user can access
     dislikeComment
+);
+
+// @route  PATCH /api/v1/videos/:videoId/comment/:commentId/reply
+// @access Private
+
+router.post(
+    '/:commentId/reply',
+    validateUser, //🔐 protected route only registered user can access
+    replyToComment
 );
 
 export default router;
