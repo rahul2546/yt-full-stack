@@ -75,4 +75,28 @@ export const getAllVideos = async (_, res, next) => {
             return next(error); // Remove ApiError wrapper for now to see real issue
             */
     }
-}
+};
+
+export const getVideoById = async (req, res, next) => {
+    try {
+
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const video = await Video.findById(videoId)
+            .populate("uploader", "username"); //Populate uploader field with user details
+
+        if(!video) {
+            throw new APIError(404, "Video not found!");
+        }
+        return res.status(200).json(
+            new APIResponse(200, video, "Video fetched successfully")
+        );
+
+
+
+        
+    } catch (error) {
+        next(new APIError(500, error.message));    
+    }
+
+};
