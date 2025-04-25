@@ -45,7 +45,7 @@ export const createComment = async (req, res, next) => {
     }
 };
 
-export const geetAllCommentsForVideo = async (req, res, next) => {
+export const getAllCommentsForVideo = async (req, res, next) => {
     try {
         const { videoId } = req.params; // Get videoId from request parameters
 
@@ -55,9 +55,9 @@ export const geetAllCommentsForVideo = async (req, res, next) => {
         const comments = await Comment.find({ video: videoId })
             .populate("author", "username") // Populate author field with user details
             .sort({ createdAt: -1 }); // Sort comments by creation date in descending order or you can say that newest first
-        
-        
-            //console.log(comments);
+
+
+        //console.log(comments);
 
         if (!comments) {
             throw new APIError(404, "No comments found for this video!");
@@ -69,4 +69,82 @@ export const geetAllCommentsForVideo = async (req, res, next) => {
     } catch (error) {
         next(new APIError(500, error.message));
     }
-}
+};
+
+export const likeComment = async (req, res, next) => {
+    try {
+
+        const { commentId } = req.params; // Get commentId from request parameters
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            throw new APIError(404, "Comment not found!");
+        }
+        // this operation is expensive so we will change it to a better one later 
+        // Remove from dislikes if it exists
+        comment.dislikes = comment.dislikes.filter(id => id.toString() !== userId.toString());
+
+        // Toggle like
+        if (comment.likes.includes(userId)) {
+            comment.likes = comment.likes.filter(id => id.toString() !== userId.toString());
+        } else {
+            comment.likes.push(userId);
+        }
+
+        await comment.save();
+        return res
+            .status(200)
+            .json(
+                new APIResponse(200, comment, "Comment liked/unliked successfully")
+            );
+
+
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+    }
+};
+
+export const dislikeComment = async (req, res, next) => {
+    try {
+
+        const { commentId } = req.params; // Get commentId from request parameters
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            throw new APIError(404, "Comment not found!");
+        }
+
+
+        // this operation is expensive so we will change it to a better one later
+
+        // Remove from likes if it exists
+
+        comment.likes = comment.likes.filter(id => id.toString() !== userId.toString());
+
+
+        // Toggle dislike
+
+        if (comment.dislikes.includes(userId)) {
+            comment.dislikes = comment.dislikes.filter(id => id.toString() !== userId.toString());
+        } else {
+            comment.dislikes.push(userId);
+        }
+
+        await comment.save();
+
+        return res
+            .status(200)
+            .json(
+                new APIResponse(200, comment, "Comment disliked/undisliked successfully")
+            );
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+    }
+};
