@@ -100,3 +100,54 @@ export const getVideoById = async (req, res, next) => {
     }
 
 };
+
+export const updateVideo =async (req, res, next) => {
+
+    try {
+        
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        const video = await Video.findById(videoId)
+
+        if(!video) {
+            throw new APIError(404, "Video not found!");
+        }
+
+        // Check if the user is the uploader of the video
+        if (video.uploader.toString() !== userId.toString()) {
+            throw new APIError(403, "You are not authorized to update this video!");
+        }
+
+        const allowedUpdateFields = ["title", "description", "tags", "isPublished"];
+
+        allowedUpdateFields.forEach((field) => {
+            if (req.body[field] !== undefined) {
+                video[field] = req.body[field];
+            }
+        });
+
+        // Handle thumbnail and  updates if provided
+
+        if (req.files) {
+            if (req.files.thumbnail && req.files.thumbnail.length > 0) {
+                const thumbnailPath = req.files.thumbnail[0].path;
+                const thumbnailResult = await uploadToCloudinary(thumbnailPath, "thumbnail");
+                video.thumbnailUrl = thumbnailResult.url;
+            }
+
+            
+        }
+
+        await video.save(); // Save the updated video document
+
+        return res.status(200).json(
+            new APIResponse(200, video, "Video updated successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));    
+    }
+
+};

@@ -1,6 +1,6 @@
 import express from 'express';
 import { upload } from '../middleware/multer.middleware.js';
-import { uploadVideo, getAllVideos, getVideoById } from '../controller/video.controller.js';
+import { uploadVideo, getAllVideos, getVideoById, updateVideo } from '../controller/video.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -34,6 +34,18 @@ router.get(
     '/:videoId',
     validateUser, //🔐 protected route only registered user can access
     getVideoById
+);
+
+// @route  PATCH /api/v1/video/:videoId/update
+// @access Private
+
+router.patch(
+    '/:videoId/update',
+    validateUser, //🔐 Protected Route
+    upload.fields([
+        { name: 'thumbnail', maxCount: 1 }
+    ]),
+    updateVideo
 );
 
 export default router;
