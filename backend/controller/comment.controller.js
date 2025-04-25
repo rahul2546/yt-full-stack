@@ -189,3 +189,44 @@ export const replyToComment = async (req, res, next) => {
         next(new APIError(500, error.message));
     }
 };
+
+export const deleteComment = async (req, res, next) => {
+
+    try {
+
+        const { commentId } = req.params; // Get commentId from request parameters
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        const comment = await Comment.findById(commentId);
+
+        if (!comment) {
+            throw new APIError(404, "comment not found!");
+        }
+
+        // Check if the user is the author of the comment
+        if (comment.author.toString() !== userId.toString()) {
+            throw new APIError(403, "You are not authorized to delete this comment!");
+        }
+
+        // If it's a reply, remove it from the parent comment's replies array
+
+        const parentComment = await Comment.findOne({ replies: commentId });
+
+
+        if (parentComment) {
+            parentComment.replies = parentComment.replies.filter(id => id.toString() !== commentId.toString());
+            await parentComment.save();
+        }
+
+        // Delete the comment
+        await Comment.deleteOne();
+
+        return res.status(200).json(
+            new APIResponse(200, null, "Comment deleted successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+    }
+};
