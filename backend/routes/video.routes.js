@@ -1,6 +1,6 @@
 import express from 'express';
 import { upload } from '../middleware/multer.middleware.js';
-import { uploadVideo, getAllVideos, getVideoById, updateVideo } from '../controller/video.controller.js';
+import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo } from '../controller/video.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -47,5 +47,23 @@ router.patch(
     ]),
     updateVideo
 );
+
+// @route  PUT /api/v1/video/:videoId/like
+// @access Private
+
+router.put(
+    '/:videoId/like',
+    validateUser, //🔐 Protected Route
+    likeVideo
+)
+
+// @route  PUT /api/v1/video/:videoId/dislike
+// @access Private
+
+router.put(
+    '/:videoId/dislike',
+    validateUser, //🔐 Protected Route
+    dislikeVideo
+)
 
 export default router;

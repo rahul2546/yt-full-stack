@@ -36,6 +36,18 @@ const videoSchema = new Schema(
       type: [String],
       default: [],
     },
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ],
+    dislikes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user",
+      },
+    ], // TODO: wee will fase out this in future updates and use a reaction model instead
     duration: {
       type: Number, // duration in seconds
       // required: true, // TODO: Add this back when you have the duration calculation logic

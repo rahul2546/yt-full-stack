@@ -151,3 +151,69 @@ export const updateVideo =async (req, res, next) => {
     }
 
 };
+
+export const likeVideo = async (req, res, next) => {
+    try {
+        
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        const video = await Video.findById(videoId);
+       // console.log(videoId, userId);
+       // console.log(video);
+
+        if(!video) {
+            throw new APIError(404, "Video not found!");
+        }
+        
+        if (video.likes.includes(userId)) {
+            video.likes.pull(userId); // Remove from likes if it exists
+        } else {
+            video.likes.push(userId); // Add to likes if it doesn't exist
+            video.dislikes.pull(userId); // Remove from dislikes if it exists
+        }
+
+        await video.save(); // Save the updated video document
+
+        return res.status(200).json(
+            new APIResponse(200, video, "Video liked/unliked successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));    
+    }
+};
+
+export const dislikeVideo = async (req, res, next) => {
+    try {
+        
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+
+        const video = await Video.findById(videoId);
+        //console.log(video);
+
+        if(!video) {
+            throw new APIError(404, "Video not found!");
+        }
+
+        if (video.dislikes.includes(userId)) {
+            video.dislikes.pull(userId); // Remove from dislikes if it exists
+        } else {
+            video.dislikes.push(userId); // Add to dislikes if it doesn't exist
+            video.likes.pull(userId); // Remove from likes if it exists
+        }
+
+        await video.save(); // Save the updated video document
+
+        return res.status(200).json(
+            new APIResponse(200, video, "Video disliked/undisliked successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));    
+    }
+};
