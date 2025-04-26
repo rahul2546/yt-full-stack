@@ -2,6 +2,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { User } from '../models/User.model.js';
 import generateToken from '../utils/generateToken.util.js';
+import APIError from '../utils/APIError.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -104,4 +105,22 @@ export const loginUser = async (req, res, next) => {
 export const getProfile = (req, res) => {
     res.status(200).json(req.user);
   };
+
+  // @desc Logout user
+// @route GET /api/auth/logout
+// @access Private
+// here for now we are just sending a message to the client that user has been logged out because we are not using refresh tokens yet
+// frontend will remove the token from local storage and redirect to login page manually
+// we will work on refresh tokens in the future
+
+export const logoutUser = (req, res,next) => {
+try {
+    res.status(200).json({ message: "User logged out successfully" });
+    // Optionally, you can also clear the token from the client side by sending a response to the client to remove the token from local storage or cookies.
+    
+} catch (error) {
+    next(new APIError(500, "Error logging out user", error));
+}
+
+};
   

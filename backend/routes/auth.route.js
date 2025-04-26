@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getProfile } from '../controller/auth.controller.js';
+import { registerUser, loginUser, getProfile, logoutUser } from '../controller/auth.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -13,8 +13,13 @@ router.post('/register', registerUser);
 
 router.post('/login', loginUser);
 
-// @route  GET /api/auth/v1/getProfile
+// @route  GET /api/v1/auth/getProfile
 // @access Private
-router.get('/getProfile', validateUser, getProfile ); //🔐 Protected Route
+router.get('/getProfile', validateUser, getProfile); //🔐 Protected Route
+
+// @route  GET /api/v1/auth/logout
+// @access Private
+router.get('/logout', validateUser, logoutUser);
+
 
 export default router
