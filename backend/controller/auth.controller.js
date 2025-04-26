@@ -3,6 +3,9 @@ import jwt from 'jsonwebtoken';
 import { User } from '../models/User.model.js';
 import generateToken from '../utils/generateToken.util.js';
 import APIError from '../utils/APIError.js';
+import APIResponse from '../utils/APIResponse.js';
+import { Video } from "../models/Video.model.js";
+import { Comment } from '../models/Comment.model.js';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -121,6 +124,42 @@ try {
 } catch (error) {
     next(new APIError(500, "Error logging out user", error));
 }
+
+};
+
+export const deleteUser = async (req, res, next) => {
+
+    try {
+        
+        const userId = req.user._id; // Assuming you have the user ID from validation middleware
+
+        // 1. Delete all videos associated with the user
+        await Video.deleteMany({ uploader: userId });
+
+        // 2. Delete all comments associated with the user
+        await Comment.deleteMany({ author: userId });
+
+        // 3. Delete the user account
+        await User.findByIdAndDelete(userId);
+
+        // 4. in the future we will also delete the refresh token from the database if we implement refresh tokens
+        // 5. in the future we will also delete the access token from the database if we implement access tokens
+        //6. in the future we will also all reactions related to the user from the database if we implement reactions
+        //7. in the future we will also all subscriptions related to the user from the database if we implement subscriptions
+
+         return res
+        .status(200)
+        .json(
+            new APIResponse(200, null, "User deleted successfully")
+        );
+
+        
+        
+
+    } catch (error) {
+        next(new APIError(500, "Error deleting user", error));
+        
+    }
 
 };
   
