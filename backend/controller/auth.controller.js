@@ -18,13 +18,16 @@ import { Comment } from '../models/Comment.model.js';
 export const registerUser = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
-    
+
         if (!username || !email || !password) {
             res.status(400);
             throw new Error('Please fill in all fields');
 
 
         }
+
+        // we will handle the case of username already exists in the future
+        // we will work to handle profile image through cloudinary in the future
 
         //Password validation
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?#&])[A-Za-z\d@$!%*?#&]{8,}$/;
@@ -47,7 +50,7 @@ export const registerUser = async (req, res, next) => {
         const user = await User.create({
             username,
             email,
-            password: hashedPassword,   
+            password: hashedPassword,
         });
 
         res.status(201).json({
@@ -56,7 +59,7 @@ export const registerUser = async (req, res, next) => {
             email: user.email,
             token: generateToken(user._id),
         });
-        
+
     } catch (error) {
         next(error);
     }
@@ -69,34 +72,34 @@ export const registerUser = async (req, res, next) => {
 export const loginUser = async (req, res, next) => {
     try {
         const { email, password } = req.body;
-            
-            if (!email || !password) {
-                res.status(400);
-                throw new Error('Please fill in all fields');
-            }
-    
-            const user = await User.findOne({ email });
-            if (!user) {
-                res.status(401);
-                throw new Error('Invalid email or password');
-            }
 
-            const isMatch = await bcrypt.compare(password, user.password);
-            if (!isMatch) {
-                res.status(401);
-                throw new Error('Invalid email or password');   
-            }
+        if (!email || !password) {
+            res.status(400);
+            throw new Error('Please fill in all fields');
+        }
 
-            res.status(200).json({
-                _id: user._id,
-                username: user.username,
-                email: user.email,
-                token: generateToken(user._id),
-            });
-        
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.status(401);
+            throw new Error('Invalid email or password');
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            res.status(401);
+            throw new Error('Invalid email or password');
+        }
+
+        res.status(200).json({
+            _id: user._id,
+            username: user.username,
+            email: user.email,
+            token: generateToken(user._id),
+        });
+
     } catch (error) {
         next(error);
-        
+
     }
 };
 
@@ -107,30 +110,30 @@ export const loginUser = async (req, res, next) => {
 // controllers/userController.js
 export const getProfile = (req, res) => {
     res.status(200).json(req.user);
-  };
+};
 
-  // @desc Logout user
+// @desc Logout user
 // @route GET /api/auth/logout
 // @access Private
 // here for now we are just sending a message to the client that user has been logged out because we are not using refresh tokens yet
 // frontend will remove the token from local storage and redirect to login page manually
 // we will work on refresh tokens in the future
 
-export const logoutUser = (req, res,next) => {
-try {
-    res.status(200).json({ message: "User logged out successfully" });
-    // Optionally, you can also clear the token from the client side by sending a response to the client to remove the token from local storage or cookies.
-    
-} catch (error) {
-    next(new APIError(500, "Error logging out user", error));
-}
+export const logoutUser = (req, res, next) => {
+    try {
+        res.status(200).json({ message: "User logged out successfully" });
+        // Optionally, you can also clear the token from the client side by sending a response to the client to remove the token from local storage or cookies.
+
+    } catch (error) {
+        next(new APIError(500, "Error logging out user", error));
+    }
 
 };
 
 export const deleteUser = async (req, res, next) => {
 
     try {
-        
+
         const userId = req.user._id; // Assuming you have the user ID from validation middleware
 
         // 1. Delete all videos associated with the user
@@ -147,19 +150,57 @@ export const deleteUser = async (req, res, next) => {
         //6. in the future we will also all reactions related to the user from the database if we implement reactions
         //7. in the future we will also all subscriptions related to the user from the database if we implement subscriptions
 
-         return res
-        .status(200)
-        .json(
-            new APIResponse(200, null, "User deleted successfully")
-        );
+        return res
+            .status(200)
+            .json(
+                new APIResponse(200, null, "User deleted successfully")
+            );
 
-        
-        
+
+
 
     } catch (error) {
         next(new APIError(500, "Error deleting user", error));
-        
+
     }
 
 };
-  
+
+// @desc  update user profile
+
+export const updateUser = async (req, res, next) => {
+
+    try {
+        const userId = req.user._id; // Assuming you have the user ID from validation middleware
+        const updateData = req.body; // Get the data to update from the request body
+
+        const notAllowedFields = ["_id", "createdAt", "updatedAt", "__v", "password", "email"];
+        // Filter out not allowed fields from updateData
+
+        notAllowedFields.forEach((field =>
+            delete updateData[field]
+        )
+        );
+
+    
+        // Update the user in the database
+        const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
+            new: true, // Return the updated user
+            runValidators: true, // Validate the update against the schema
+        }).select("-password"); // Exclude the password field from the response
+
+
+        if (!updatedUser) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, updatedUser, "User updated successfully")
+        );
+
+
+    } catch (error) {
+        next(new APIError(500, "Error updating user", error));
+    }
+};
+
