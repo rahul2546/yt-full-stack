@@ -1,6 +1,6 @@
 import express from 'express';
 import { upload } from '../middleware/multer.middleware.js';
-import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo } from '../controller/video.controller.js';
+import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo, deleteVideo } from '../controller/video.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -64,6 +64,15 @@ router.put(
     '/:videoId/dislike',
     validateUser, //🔐 Protected Route
     dislikeVideo
+)
+
+// @route DELETE /api/v1/video/:videoId/delete
+// @access Private
+
+router.delete(
+    '/:videoId/delete',
+    validateUser, //🔐 Protected Route
+    deleteVideo
 )
 
 export default router;

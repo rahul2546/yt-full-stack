@@ -2,6 +2,7 @@ import uploadToCloudinary from "../utils/cloudinaryUploader.js";
 import APIError from "../utils/APIError.js";
 import APIResponse from "../utils/APIResponse.js";
 import { Video } from "../models/Video.model.js";
+import { Comment } from "../models/Comment.model.js";
 
 export const uploadVideo = async (req, res, next) => {
     try {
@@ -215,5 +216,42 @@ export const dislikeVideo = async (req, res, next) => {
 
     } catch (error) {
         next(new APIError(500, error.message));    
+    }
+};
+
+export const deleteVideo = async (req, res, next) =>{
+    try {
+
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
+
+        const video = await Video.findById(videoId);
+
+        if(!video) {
+            throw new APIError(404, "Video not found!");
+        }
+
+        // Check if the user is the uploader of the video
+
+        if (video.uploader.toString() !== userId.toString()) {
+            throw new APIError(403, "You are not authorized to delete this video!");
+        }
+
+        await video.deleteOne(); // Delete the video document
+        await Comment.deleteMany({ video: videoId }); // Delete all comments associated with the video
+
+        return res.status(200).json(
+            new APIResponse(200, null, "Video deleted successfully")
+        );
+
+
+        
+
+        }
+        
+     catch (error) {
+        next(new APIError(500, error.message));
+        
     }
 };
