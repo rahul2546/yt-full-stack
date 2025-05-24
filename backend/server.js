@@ -6,6 +6,7 @@ import { notFound, errorHandler } from './middleware/error.middleware.js'; // Er
 import authRoutes from './routes/auth.route.js'; // User authentication route
 import videoRoutes from './routes/video.routes.js'; // Video upload route
 import commentRoutes from './routes/comment.route.js'; // Comment route
+import subscriptionRoutes from './routes/subscription.routes.js'; // Subscription route
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ app.use(express.json()); // Parse JSON bodies
 app.use('/api/v1/auth', authRoutes); // User authentication route
 app.use('/api/v1/video', videoRoutes); // Video  route
 app.use('/api/v1/videos/:videoId/comment', commentRoutes); // Comment route
+app.use('/api/v1/subscription', subscriptionRoutes) // Subscription route
 
 //Error handling middlewares
 app.use(notFound);
