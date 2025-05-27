@@ -98,7 +98,7 @@ const getSubscribersCount = async (req, res, next) => {
     }
 }
 
-const getSubscriptions = async (req,res,next) => {
+const getSubscriptions = async (req, res, next) => {
     try {
 
         const userId = req.user._id; // the user whose subscriptions you want to get
@@ -109,24 +109,61 @@ const getSubscriptions = async (req,res,next) => {
 
         if (!subscriptions || subscriptions.length === 0) {
             return res
-            .status(404)
-            .json(new APIResponse(404, null, "No subscriptions found for this user!"));
+                .status(404)
+                .json(new APIResponse(404, null, "No subscriptions found for this user!"));
         }
 
         res
             .status(200)
             .json(new APIResponse(200, subscriptions, "Subscriptions retrieved successfully!"));
-        
+
     } catch (error) {
         next(new APIError(500, error.message));
-        
+
     }
 }
+
+const toggleSubscription = async (req, res, next) => {
+    try {
+        const subscriberId = req.user._id; // the user who is subscribing or unsubscribing
+        const subscribedToId = req.params.userID; // the channel you want to subscribe or unsubscribe from
+
+        // Check if the user is subscribing to themselves
+        if (subscriberId.toString() === subscribedToId.toString()) {
+            return res.status(400).json(new APIResponse(400, null, "You cannot subscribe to yourself!"));
+        }
+
+        const existingSubscription = await Subscription.findOne({
+            subscriber: subscriberId,
+            subscribedTo: subscribedToId,
+        });
+
+        if (existingSubscription) {
+            // User is already subscribed, so unsubscribe
+            await Subscription.deleteOne({
+                _id: existingSubscription._id,
+            });
+            return res.status(200).json(new APIResponse(200, null, "Successfully unsubscribed from the user!"));
+        } else {
+            // User is not subscribed, so subscribe
+            const newSubscription = await Subscription.create({
+                subscriber: subscriberId,
+                subscribedTo: subscribedToId,
+            });
+            return res.status(201).json(new APIResponse(201, newSubscription, "Successfully subscribed to the user!"));
+        }
+    } catch (error) {
+        next(new APIError(500, error.message));
+
+    }
+
+};
 
 export {
     subscribeToUser,
     unSubscribeToUser,
     getSubscribersCount,
-    getSubscriptions
+    getSubscriptions,
+    toggleSubscription
 
 };

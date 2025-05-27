@@ -86,7 +86,7 @@ export const getVideoById = async (req, res, next) => {
         const video = await Video.findById(videoId)
             .populate("uploader", "username"); //Populate uploader field with user details
 
-        if(!video) {
+        if (!video) {
             throw new APIError(404, "Video not found!");
         }
         return res.status(200).json(
@@ -95,24 +95,53 @@ export const getVideoById = async (req, res, next) => {
 
 
 
-        
+
     } catch (error) {
-        next(new APIError(500, error.message));    
+        next(new APIError(500, error.message));
     }
 
 };
 
-export const updateVideo =async (req, res, next) => {
+export const getChannelVideos = async (req, res, next) => {
+    try {
+
+        const { channelId } = req.params; // Get channelId from request parameters
+
+        const videos = await Video.find({
+            uploader: channelId,
+            isPublished: true
+        }) // Fetch videos uploaded by the channel
+            .populate("uploader", "username") // Populate uploader field with user details
+            .sort({ createdAt: -1 }); // latest videos first
+
+        if (!videos || videos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No videos found for this channel")
+            );
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, videos, "Channel videos fetched successfully")
+        );
+
+
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+    }
+};
+
+export const updateVideo = async (req, res, next) => {
 
     try {
-        
+
         const { videoId } = req.params; // Get videoId from request parameters
 
         const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
 
         const video = await Video.findById(videoId)
 
-        if(!video) {
+        if (!video) {
             throw new APIError(404, "Video not found!");
         }
 
@@ -138,7 +167,7 @@ export const updateVideo =async (req, res, next) => {
                 video.thumbnailUrl = thumbnailResult.url;
             }
 
-            
+
         }
 
         await video.save(); // Save the updated video document
@@ -148,26 +177,26 @@ export const updateVideo =async (req, res, next) => {
         );
 
     } catch (error) {
-        next(new APIError(500, error.message));    
+        next(new APIError(500, error.message));
     }
 
 };
 
 export const likeVideo = async (req, res, next) => {
     try {
-        
+
         const { videoId } = req.params; // Get videoId from request parameters
 
         const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
 
         const video = await Video.findById(videoId);
-       // console.log(videoId, userId);
-       // console.log(video);
+        // console.log(videoId, userId);
+        // console.log(video);
 
-        if(!video) {
+        if (!video) {
             throw new APIError(404, "Video not found!");
         }
-        
+
         if (video.likes.includes(userId)) {
             video.likes.pull(userId); // Remove from likes if it exists
         } else {
@@ -182,13 +211,13 @@ export const likeVideo = async (req, res, next) => {
         );
 
     } catch (error) {
-        next(new APIError(500, error.message));    
+        next(new APIError(500, error.message));
     }
 };
 
 export const dislikeVideo = async (req, res, next) => {
     try {
-        
+
         const { videoId } = req.params; // Get videoId from request parameters
 
         const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
@@ -197,7 +226,7 @@ export const dislikeVideo = async (req, res, next) => {
         const video = await Video.findById(videoId);
         //console.log(video);
 
-        if(!video) {
+        if (!video) {
             throw new APIError(404, "Video not found!");
         }
 
@@ -215,11 +244,11 @@ export const dislikeVideo = async (req, res, next) => {
         );
 
     } catch (error) {
-        next(new APIError(500, error.message));    
+        next(new APIError(500, error.message));
     }
 };
 
-export const deleteVideo = async (req, res, next) =>{
+export const deleteVideo = async (req, res, next) => {
     try {
 
         const { videoId } = req.params; // Get videoId from request parameters
@@ -228,7 +257,7 @@ export const deleteVideo = async (req, res, next) =>{
 
         const video = await Video.findById(videoId);
 
-        if(!video) {
+        if (!video) {
             throw new APIError(404, "Video not found!");
         }
 
@@ -246,12 +275,12 @@ export const deleteVideo = async (req, res, next) =>{
         );
 
 
-        
 
-        }
-        
-     catch (error) {
+
+    }
+
+    catch (error) {
         next(new APIError(500, error.message));
-        
+
     }
 };

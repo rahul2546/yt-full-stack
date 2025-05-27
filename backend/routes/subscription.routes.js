@@ -1,5 +1,5 @@
 import express from 'express';
-import { getSubscribersCount, getSubscriptions, subscribeToUser, unSubscribeToUser } from '../controller/subscription.controller.js';
+import { getSubscribersCount, getSubscriptions, subscribeToUser, toggleSubscription, unSubscribeToUser } from '../controller/subscription.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -8,13 +8,13 @@ const router = express.Router();
 // @desc Subscribe to a user
 // @access Private
 
-router.post('/:userID', validateUser, subscribeToUser);
+//router.post('/:userID', validateUser, subscribeToUser);
 
 // @route DELETE /api/v1/subscription/:userID
 // @desc Unsubscribe from a user
 // @access Private
 
-router.delete('/:userID', validateUser, unSubscribeToUser);  
+//router.delete('/:userID', validateUser, unSubscribeToUser);  
 
 // @route GET /api/v1/subscription/count/:userID
 // @desc Get the subscription count of a user
@@ -27,5 +27,13 @@ router.get('/count/:userID', getSubscribersCount);
 // @access Private
 
 router.get('/my', validateUser, getSubscriptions);
+
+// @route POST /api/v1/subscription/:userID
+// @desc Toggle subscription (subscribe/unsubscribe)
+// @access Private
+
+router.post('/:userID', validateUser, toggleSubscription); // Toggle subscription (subscribe/unsubscribe)
+
+
 
 export default router;
