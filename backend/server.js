@@ -8,6 +8,8 @@ import videoRoutes from './routes/video.routes.js'; // Video upload route
 import commentRoutes from './routes/comment.route.js'; // Comment route
 import subscriptionRoutes from './routes/subscription.routes.js'; // Subscription route
 
+import channelRoutes from './routes/channel.route.js'; // Channel information route
+
 dotenv.config();
 
 const app = express();
@@ -29,6 +31,7 @@ app.use('/api/v1/auth', authRoutes); // User authentication route
 app.use('/api/v1/video', videoRoutes); // Video  route
 app.use('/api/v1/videos/:videoId/comment', commentRoutes); // Comment route
 app.use('/api/v1/subscription', subscriptionRoutes) // Subscription route
+app.use('/api/v1/channel', channelRoutes); // Channel information route
 
 //Error handling middlewares
 app.use(notFound);
