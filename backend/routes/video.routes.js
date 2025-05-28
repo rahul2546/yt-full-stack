@@ -1,6 +1,6 @@
 import express from 'express';
 import { upload } from '../middleware/multer.middleware.js';
-import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo, deleteVideo, getChannelVideos } from '../controller/video.controller.js';
+import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo, deleteVideo, getChannelVideos, searchVideos } from '../controller/video.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -27,6 +27,15 @@ router.get(
     getAllVideos
 
 );
+
+// @route  GET /api/v1/video/search
+// @access Public
+//example: /api/v1/video/search?query=funny
+
+router.get(
+    '/search',
+    searchVideos
+)
 
 // @route  GET /api/v1/video/:videoId
 // @access Private
@@ -82,5 +91,7 @@ router.get(
     '/channel/:channelId',
     getChannelVideos
 )
+
+
 
 export default router;

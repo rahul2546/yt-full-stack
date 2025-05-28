@@ -131,6 +131,44 @@ export const getChannelVideos = async (req, res, next) => {
     }
 };
 
+export const searchVideos = async (req, res, next) => {
+
+    const { query } = req.query; // Get search query from request parameters
+
+    if (!query || query.trim() === "") {
+        return res.status(400).json(
+            new APIResponse(400, null, "Search query cannot be empty")
+        );
+    }
+    try {
+        const regex = new RegExp(query, "i"); // Create a case-insensitive regex for the search query
+
+        const videos = await Video.find({
+            $or: [
+                { title: { $regex: regex } }, // Search in title
+                { description: { $regex: regex } }, // Search in description
+                { tags: { $in: [regex] } } // Search in tags
+            ],
+            isPublished: true // Only fetch published videos
+        }).
+            populate("uploader", "username") // Populate uploader field with user details
+            .sort({ createdAt: -1 }); // Sort videos by creation date in descending order
+
+        if (!videos || videos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No videos found for this search query")
+            );
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, videos, "Videos fetched successfully")
+        );
+    } catch (error) {
+        next(new APIError(500, error.message));
+
+    }
+};
+
 export const updateVideo = async (req, res, next) => {
 
     try {
