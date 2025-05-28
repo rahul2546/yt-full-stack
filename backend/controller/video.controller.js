@@ -169,6 +169,59 @@ export const searchVideos = async (req, res, next) => {
     }
 };
 
+export const filterVideosByTags = async (req, res, next) => {
+    try {
+        const { tags } = req.query; // Get tags from request query
+        if (!tags || tags.length === 0) {
+            return res.status(400).json(
+                new APIResponse(400, null, "Tags query cannot be empty")
+            );
+        }
+
+        const tagsArray = tags.split(",").map(tag => tag.trim()); // Split tags by comma and trim whitespace
+
+        const videos = await Video.find({
+            tags: { $in: tagsArray }
+        }).
+            populate("uploader", "username profileImg")
+            .sort({ createdAt: -1 }); // Sort videos by creation date in descending order
+        if (!videos || videos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No videos found for the provided tags")
+            );
+        }
+        return res.status(200).json(
+            new APIResponse(200, videos, "Videos filtered by tags successfully")
+        );
+            
+    } catch (error) {
+        next(new APIError(500, error.message));
+    }
+};
+
+export const getTrendingVideos = async (req, res, next) => {
+    try {
+        const videos = await Video.find({ isPublished: true })
+            .populate("uploader", "username profileImg") // Populate uploader field with user details
+            .sort({ views: -1 }) // Sort videos by views in descending order
+            .limit(10); // Limit to top 10 trending videos
+
+        if (!videos || videos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No trending videos found")
+            );
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, videos, "Trending videos fetched successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+        
+    }
+}; 
+
 export const updateVideo = async (req, res, next) => {
 
     try {
