@@ -34,9 +34,21 @@ export const uploadVideo = async (req, res, next) => {
             "video"
         );
 
-        //TODO: Add video duration calculation, which can be done using ffmpeg or any other library
-        // TODO: will handle tags and other metadata later
+        const duration = Math.floor(videoResult?.duration || 0); // Assuming videoResult contains duration in seconds
 
+        console.log("Video Duration:", duration); // Debugging line to check video duration
+
+
+        let tags = [];
+        if (req.body.tags) {
+            tags = req.body.tags
+                .split(",")
+                .map((tag) => tag.trim())
+                .filter((tag) => tag !== "")
+                ; // Split tags by comma, trim whitespace, and filter out empty tags
+
+        }
+        // i have updated the duration and tags for video upload to a stable version if error occurs check here 
 
         const newVideo = await Video.create({
             title,
@@ -44,6 +56,8 @@ export const uploadVideo = async (req, res, next) => {
             thumbnailUrl: thumbnailResult.url,
             videoUrl: videoResult.url,
             uploader: userId,
+            tags,
+            duration
         });
 
         return res.status(201).json(
@@ -193,7 +207,7 @@ export const filterVideosByTags = async (req, res, next) => {
         return res.status(200).json(
             new APIResponse(200, videos, "Videos filtered by tags successfully")
         );
-            
+
     } catch (error) {
         next(new APIError(500, error.message));
     }
@@ -218,9 +232,9 @@ export const getTrendingVideos = async (req, res, next) => {
 
     } catch (error) {
         next(new APIError(500, error.message));
-        
+
     }
-}; 
+};
 
 export const updateVideo = async (req, res, next) => {
 
@@ -373,5 +387,22 @@ export const deleteVideo = async (req, res, next) => {
     catch (error) {
         next(new APIError(500, error.message));
 
+    }
+};
+export const incrementViewCount = async (req, res, next) => {
+    try {
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const video = await Video.findById(videoId);
+        if (!video) {
+            throw new APIError(404, "Video not found!");
+        }
+        video.views += 1; // Increment the view count
+        await video.save(); // Save the updated video document
+        return res.status(200).json(
+            new APIResponse(200, video, "View count incremented successfully")
+        );
+    } catch (error) {
+        next(new APIError(500, error.message));
     }
 };

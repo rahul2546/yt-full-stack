@@ -37,6 +37,7 @@ const uploadToCloudinary = async (localFilePath,
             return {
                 public_id: response.public_id,
                 url: response.secure_url,
+                duration: response.duration || null // Duration is applicable for videos
             };
         } catch (error) {
             console.error("Error uploading to Cloudinary:", error);
