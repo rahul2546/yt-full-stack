@@ -406,3 +406,85 @@ export const incrementViewCount = async (req, res, next) => {
         next(new APIError(500, error.message));
     }
 };
+
+export const getExploreVideos = async (req, res, next) => {
+    try {
+        const videos = await Video.find({ isPublished: true })
+            .populate("uploader", "username profileImg") // Populate uploader field with user details
+            .sort({ createdAt: -1 }) // Sort videos by creation date in descending order
+            .limit(20); // Limit to 20 videos for exploration
+
+        if (!videos || videos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No videos found for exploration")
+            );
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, videos, "Explore videos fetched successfully")
+        );
+    } catch (error) {
+        next(new APIError(500, error.message));
+        
+    }
+};
+
+export const getRandomVideos = async (req, res, next) => {
+    try {
+        
+        const videos = await Video.aggregate([
+            { $match: { isPublished: true } }, // Match only published videos
+            { $sample: { size: 10 } } // Randomly sample 10 videos
+        ])
+            .populate("uploader", "username profileImg") // Populate uploader field with user details
+            .exec();
+
+        if (!videos || videos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No random videos found")
+            );
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, videos, "Random videos fetched successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+        
+    }
+};
+
+export const getSuggestedVideos = async (req, res, next) => {
+    try {
+        const { videoId } = req.params; // Get videoId from request parameters
+
+        const video = await Video.findById(videoId);
+        if (!video) {
+            throw new APIError(404, "Video not found!");
+        }
+
+        const suggestedVideos = await Video.find({
+            _id: { $ne: videoId }, // Exclude the current video
+            isPublished: true,
+            tags: { $in: video.tags } // Find videos with similar tags
+        })
+            .populate("uploader", "username profileImg") // Populate uploader field with user details
+            .sort({ createdAt: -1 }) // Sort by creation date in descending order
+            .limit(10); // Limit to 10 suggested videos
+
+        if (!suggestedVideos || suggestedVideos.length === 0) {
+            return res.status(404).json(
+                new APIResponse(404, null, "No suggested videos found")
+            );
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, suggestedVideos, "Suggested videos fetched successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, error.message));
+        
+    }
+};

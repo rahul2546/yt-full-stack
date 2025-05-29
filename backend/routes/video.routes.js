@@ -1,6 +1,6 @@
 import express from 'express';
 import { upload } from '../middleware/multer.middleware.js';
-import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo, deleteVideo, getChannelVideos, searchVideos, filterVideosByTags, getTrendingVideos, incrementViewCount } from '../controller/video.controller.js';
+import { uploadVideo, getAllVideos, getVideoById, updateVideo, likeVideo, dislikeVideo, deleteVideo, getChannelVideos, searchVideos, filterVideosByTags, getTrendingVideos, incrementViewCount, getSuggestedVideos, getExploreVideos, getRandomVideos } from '../controller/video.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -114,6 +114,34 @@ router.get(
 router.post(
     '/incrementViews/:videoId',
     incrementViewCount
+)
+
+// @route  GET /api/v1/video/suggestedVideos/:videoId
+// @access Private
+
+router.get(
+    '/suggestedVideos/:videoId',
+    validateUser, //🔐 Protected Route
+    getSuggestedVideos
+)
+
+// @route  GET /api/v1/video/explore
+// @access Private
+
+
+router.get(
+    '/explore',
+    validateUser, //🔐 Protected Route
+    getExploreVideos
+)
+
+// @route  GET /api/v1/video/random
+// @access Private
+
+router.get(
+    '/random',
+    validateUser, //🔐 Protected Route
+    getRandomVideos
 )
 
 
