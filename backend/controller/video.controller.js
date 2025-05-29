@@ -48,7 +48,7 @@ export const uploadVideo = async (req, res, next) => {
                 ; // Split tags by comma, trim whitespace, and filter out empty tags
 
         }
-        // i have updated the duration and tags for video upload to a stable version if error occurs check here 
+        
 
         const newVideo = await Video.create({
             title,

@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getProfile, logoutUser, deleteUser, updateUser } from '../controller/auth.controller.js';
+import { registerUser, loginUser, getProfile, logoutUser, deleteUser, updateUser, addToWatchLater, getWatchLaterVideos, removeFromWatchLater, addToHistory, getHistory, clearHistory } from '../controller/auth.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -52,5 +52,58 @@ router.put(
      updateUser
 );
 
+// @route  POST /api/v1/auth/watch-later
+// @access Private
+
+router.post(
+    '/watch-later',
+    validateUser, // 🔐 Protected Route
+    addToWatchLater
+)
+
+// @route  GET /api/v1/auth/watch-later
+// @access Private
+
+router.get(
+    '/watch-later',
+    validateUser, // 🔐 Protected Route
+    getWatchLaterVideos
+)
+
+// @route  DELETE /api/v1/auth/watch-later
+// @access Private
+
+router.delete(
+    '/watch-later',
+    validateUser, // 🔐 Protected Route
+    removeFromWatchLater
+)
+
+// @route  POST /api/v1/auth/history
+// @access Private
+
+router.post(
+    '/history',
+    validateUser, // 🔐 Protected Route
+    addToHistory
+);
+
+// @route  GET /api/v1/auth/history
+// @access Private
+
+router.get(
+    '/history',
+    validateUser, // 🔐 Protected Route
+    getHistory
+);
+
+// @route  DELETE /api/v1/auth/history
+// @access Private
+
+router.delete(
+    '/history',
+    validateUser, // 🔐 Protected Route
+    clearHistory
+);
 
 export default router

@@ -6,6 +6,7 @@ import APIError from '../utils/APIError.js';
 import APIResponse from '../utils/APIResponse.js';
 import { Video } from "../models/Video.model.js";
 import { Comment } from '../models/Comment.model.js';
+import path from 'path';
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -182,7 +183,7 @@ export const updateUser = async (req, res, next) => {
         )
         );
 
-    
+
         // Update the user in the database
         const updatedUser = await User.findByIdAndUpdate(userId, updateData, {
             new: true, // Return the updated user
@@ -204,3 +205,188 @@ export const updateUser = async (req, res, next) => {
     }
 };
 
+// Add a video to watch later list
+
+export const addToWatchLater = async (req, res, next) => {
+    try {
+        const { videoId } = req.body; // Get videoId from request body
+
+        if (!videoId) {
+            return res.status(400).json(new APIError(400, "Video ID is required"));
+        }
+
+        const user = await User.findById(req.user._id); // Get the authenticated user
+
+        if (!user) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        if (!user.watchLater.includes(videoId)) {
+            // Check if the video is already in watch later
+            user.watchLater.push(videoId); // Add videoId to watchLater array
+            await user.save(); // Save the updated user document
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, user.watchLater, "Video added to watch later successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, "Error adding video to watch later", error));
+
+    }
+};
+
+// Remove a video from watch later list
+
+export const removeFromWatchLater = async (req, res, next) => {
+    try {
+        const { videoId } = req.body; // Get videoId from request body
+
+        if (!videoId) {
+            return res.status(400).json(new APIError(400, "Video ID is required"));
+        }
+
+        const user = await User.findById(req.user._id); // Get the authenticated user
+
+        if (!user) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        const videoIndex = user.watchLater.indexOf(videoId); // Find the index of the videoId in watchLater array
+
+        if (videoIndex > -1) {
+            user.watchLater.splice(videoIndex, 1); // Remove the videoId from watchLater array
+            await user.save(); // Save the updated user document
+        } else {
+            return res.status(404).json(new APIError(404, "Video not found in watch later"));
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, user.watchLater, "Video removed from watch later successfully")
+        );
+    } catch (error) {
+        next(new APIError(500, "Error removing video from watch later", error));
+
+    }
+};
+
+// Get all videos in watch later list
+
+export const getWatchLaterVideos = async (req, res, next) => {
+    try {
+
+        const user = await User.findById(req.user._id).populate({
+            path: 'watchLater',
+            populate: {
+                path: 'uploader', // Populate uploader details for each video in watchLater
+                select: 'username profileImg' // Select only username and profileImg fields from uploader
+            },
+        }); // Get the authenticated user and populate watchLater array with video details
+
+       
+        if (!user) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        if (user.watchLater.length === 0) {
+            return res.status(200).json(new APIResponse(200, [], "No videos in watch later"));
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, user.watchLater, "Watch later videos fetched successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, "Error fetching watch later videos", error));
+
+    }
+};
+
+export const addToHistory = async (req, res, next) => {
+    try {
+        
+        const { videoId } = req.body; // Get videoId from request body
+        
+        if (!videoId) {
+            return res.status(400).json(new APIError(400, "Video ID is required"));
+        }
+
+        const user = await User.findById(req.user._id); // Get the authenticated user
+
+        if (!user) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        // Remove if already exists to push it to latest
+        user.history = user.history.filter(id => id.toString() !== videoId);
+        user.history.unshift(videoId); // Add videoId to the beginning of history array
+
+        // Limit history to the last 50 videos
+
+        if (user.history.length > 50) {
+            user.history = user.history.slice(0, 50); // Keep only the last 50 videos
+        }
+
+        await user.save(); // Save the updated user document
+
+        return res.status(200).json(
+            new APIResponse(200, user.history, "Video added to history successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, "Error adding video to history", error));
+        
+    }
+};
+
+export const getHistory = async (req, res, next) => {
+    try {
+        
+        const user = await User.findById(req.user._id).populate({
+            path: 'history',
+            populate: {
+                path: 'uploader',
+                select: 'username profileImg' // Select only username and profileImg fields from uploader
+            },
+        });
+
+        if (!user) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        if (user.history.length === 0) {
+            return res.status(200).json(new APIResponse(200, [], "No videos in history"));
+        }
+
+        return res.status(200).json(
+            new APIResponse(200, user.history, "History fetched successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, "Error fetching history", error));
+        
+    }
+};
+
+export const clearHistory = async (req, res, next) => {
+    try {
+        
+        const user = await User.findById(req.user._id);
+
+        if (!user) {
+            return res.status(404).json(new APIError(404, "User not found"));
+        }
+
+        user.history = []; // Clear the history array
+        await user.save(); // Save the updated user document
+
+        return res.status(200).json(
+            new APIResponse(200, [], "History cleared successfully")
+        );
+
+    } catch (error) {
+        next(new APIError(500, "Error clearing history", error));
+        
+    }
+};

@@ -30,6 +30,19 @@ const userSchema = new Schema(
       type: String,
       default: "",
     },
+    watchLater: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "video",
+      },
+    ],
+    history: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "video",
+      },
+    ],
+
   },
   { timestamps: true }
 );

@@ -10,6 +10,8 @@ import subscriptionRoutes from './routes/subscription.routes.js'; // Subscriptio
 
 import channelRoutes from './routes/channel.route.js'; // Channel information route
 
+import playlistRoutes from './routes/playlist.routes.js'; // Playlist route
+
 dotenv.config();
 
 const app = express();
@@ -32,6 +34,7 @@ app.use('/api/v1/video', videoRoutes); // Video  route
 app.use('/api/v1/videos/:videoId/comment', commentRoutes); // Comment route
 app.use('/api/v1/subscription', subscriptionRoutes) // Subscription route
 app.use('/api/v1/channel', channelRoutes); // Channel information route
+app.use('/api/v1/playlist', playlistRoutes); // Playlist route
 
 //Error handling middlewares
 app.use(notFound);
