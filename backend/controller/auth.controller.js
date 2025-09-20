@@ -16,6 +16,8 @@ import path from 'path';
 
 //TODO: we will work on the concept of Access and Refresh tokens in the future
 
+// TODO: In future we will make a util to handle async errors to avoid try catch block in every controller
+
 export const registerUser = async (req, res, next) => {
     try {
         const { username, email, password } = req.body;
@@ -27,7 +29,7 @@ export const registerUser = async (req, res, next) => {
 
         }
 
-        // we will handle the case of username already exists in the future
+        // we will handle the case of username already exists, in the future
         // we will work to handle profile image through cloudinary in the future
 
         //Password validation
