@@ -23,7 +23,7 @@ router.post(
 
 router.get(
     '/allVideos',
-    validateUser, //🔐 protected route only registered user can access
+    // validateUser, //🔐 protected route only registered user can access
     getAllVideos
 
 );

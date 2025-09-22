@@ -3,6 +3,7 @@ import { Routes, Route } from 'react-router-dom';
 import MainLayout from './layouts/MainLayout'; // Import the new layout
 import HomePage from './pages/HomePage';
 import WatchPage from './pages/WatchPage';
+import SearchResultsPage from './pages/SearchResultsPage';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         {/* The "index" route is the default page for the parent path "/" */}
         <Route index element={<HomePage />} />
         <Route path="watch/:videoId" element={<WatchPage />} />
+        <Route path="/results" element={<SearchResultsPage />} />
       </Route>
     </Routes>
   );

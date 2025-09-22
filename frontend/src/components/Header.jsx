@@ -1,11 +1,24 @@
 // src/components/Header.jsx
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Menu, Youtube, Search, Video, Bell } from 'lucide-react';
+import { Menu, Youtube, Search, Video, Bell, Sun, Moon } from 'lucide-react';
 
-const Header = ({onMenuClick}) => {
+const Header = ({onMenuClick, theme, toggleTheme}) => {
+
+	const [searchQuery, setSearchQuery] = React.useState('');
+	const navigate = useNavigate();
+
+	const handleSearch = (e) => {
+    e.preventDefault(); // Prevent the page from reloading
+    if (searchQuery.trim()) {
+      // Navigate to the results page with the query as a URL parameter
+      navigate(`/results?search_query=${searchQuery.trim()}`);
+    }
+  };
+
   return (
     <header className="flex justify-between items-center p-4 border-b">
       {/* Left Section */}
@@ -20,19 +33,24 @@ const Header = ({onMenuClick}) => {
       </div>
 
       {/* Center Section */}
-      <div className="flex flex-grow max-w-2xl">
+      <form onSubmit={handleSearch} className="flex flex-grow max-w-2xl">
         <Input
           type="search"
           placeholder="Search"
           className="rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0 border-r-0"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button variant="outline" className="rounded-l-none border-l-0">
+        <Button type="submit" variant="outline" className="rounded-l-none border-l-0">
           <Search className="h-6 w-6" />
         </Button>
-      </div>
+      </form>
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
+		 <Button onClick={toggleTheme} variant="ghost" size="icon">
+          {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
+        </Button>
         <Button variant="ghost" size="icon">
           <Video className="h-6 w-6" />
         </Button>
