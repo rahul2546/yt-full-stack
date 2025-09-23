@@ -1,30 +1,33 @@
 // src/components/VideoPlayer.jsx
-import React, { useState, useEffect } from 'react';
-import ReactPlayer from 'react-player';
+import React from 'react';
 
-// It now accepts a full 'url' prop
 const VideoPlayer = ({ url }) => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  // If the URL hasn't loaded yet, show a placeholder
+  if (!url) {
+    return <div className="aspect-video bg-black flex items-center justify-center text-white">Loading video...</div>;
+  }
 
   return (
     <div className="aspect-video">
-      {isClient && (
-        <ReactPlayer
-          // It simply plays whatever URL it is given
-          url={url}
-          controls={true}
-          width="100%"
-          height="100%"
-          playing={true}
-        />
-      )}
+      <video
+        // The src attribute is the direct URL to your video file
+        src={url}
+        
+        // 'controls' is essential to show the play/pause/volume controls
+        controls
+        
+        // These make the video fill its container
+        width="100%"
+        height="100%"
+        
+        // Optional: Muted autoplay is usually allowed by browsers
+        autoPlay
+        muted
+      >
+        Your browser does not support the video tag.
+      </video>
     </div>
   );
 };
 
 export default VideoPlayer;
-
-// in future we will optimize this component because now it loads all type of players like vimeo, youtube, etc. but we will only use it for our own videos. for there is some config issue.

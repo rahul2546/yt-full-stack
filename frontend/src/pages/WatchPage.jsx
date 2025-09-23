@@ -1,29 +1,61 @@
 // src/pages/WatchPage.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '@/components/VideoPlayer';
 import VideoDetails from '@/components/VideoDetails';
-import { mockVideos } from '../mockData'; // Adjust path if necessary
+import { mockVideos } from '../mockData'; 
+import { getVideoById } from '../api/videoService';
 import RecommendedVideos from '@/components/RecommendedVideos';
 const WatchPage = () => {
   const { videoId } = useParams();
+  const [video, setVideo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Find the full video object from our mock data using the id from the URL
-  const video = mockVideos.find(v => v.id === videoId);
+ useEffect(() => {
+  const fetchVideoData = async () => {
+    try{
+      setLoading(true); // Start loading
+      const fetchedVideo = await getVideoById(videoId);
+      setVideo(fetchedVideo);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false); // End loading
+    }
+  };
+  fetchVideoData();
+ }, [videoId]); // Refetch if videoId changes
 
-  // If the video doesn't exist, show a message
+ // Handle loading state and error state
+  if (loading) {
+    return <div className="p-4">Loading video...</div>;
+  }
+  if (error) {
+    return <div className="p-4 text-red-500">Error: {error}</div>;
+  }
   if (!video) {
-    return <div>Video not found!</div>;
+    return <div className="p-4">Video not found.</div>;
   }
 
-  // --- THIS IS THE KEY PART ---
-  // For now, we construct the YouTube URL.
-  const videoUrl = `https://www.youtube.com/watch?v=${video.youtubeId}`;
-  
-  // **IN THE FUTURE, YOU WILL ONLY CHANGE THIS ONE LINE!**
-  // For example:
-  // const videoUrl = `http://localhost:8080/videos/${video.fileName}`;
-  // -------------------------
+    // --- DEBUGGING LINES START ---
+  console.log("Video object received from API:", video);
+  const videoUrl = video.videoUrl;
+  console.log("URL being passed to player:", videoUrl);
+  // --- DEBUGGING LINES END ---
+
+
+  // Construct the full video URL
+  //const videoUrl = video.videoUrl; // Assuming videoUrl is a full URL which came from own backend and can be directly used in VideoPlayer
+
+  const videoDetailsProps = {
+    ...video, // Spread all video properties came from backend
+    channel : {
+      name: video.uploader.username,
+      avatarUrl: 'https://github.com/shadcn.png', // Placeholder avatar URL
+      subscriberCount: 1000 // Placeholder subscriber count 
+    }
+  };
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-4">
@@ -32,7 +64,7 @@ const WatchPage = () => {
         <VideoPlayer url={videoUrl} />
         
         <div className="mt-4">          
-          <VideoDetails video={video} />        
+          <VideoDetails video={videoDetailsProps} />        
         </div>
       </div>
       

@@ -19,7 +19,7 @@ router.post(
 );
 
 // @route  GET /api/v1/video/allVideos
-// @access Private
+// @access Public
 
 router.get(
     '/allVideos',
@@ -54,10 +54,9 @@ router.get(
 );
 
 // @route  GET /api/v1/video/:videoId
-// @access Private
+// @access Public
 router.get(
     '/:videoId',
-    validateUser, //🔐 protected route only registered user can access
     getVideoById
 );
 

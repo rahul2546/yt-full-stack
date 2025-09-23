@@ -10,3 +10,14 @@ export const fetchAllVideos = async () => {
 		throw error;
 	}
 };
+
+export const getVideoById = async (videoId) => {
+  try {
+    // This assumes your endpoint is /video/:id. Change if needed.
+    const response = await api.get(`/video/${videoId}`);
+    return response.data.data;
+  } catch (error) {
+    console.error(`Error fetching video with id ${videoId}:`, error);
+    throw error;
+  }
+};
