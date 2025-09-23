@@ -1,7 +1,6 @@
 import React, { useState} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { loginSuccess } from "../store/authSlice";
+import { useNavigate, Link } from "react-router-dom";
 import { login } from "../store/authSlice";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -65,6 +64,10 @@ return (
               {loading ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
+		   <div className="mt-4 text-center text-sm">
+            Don't have an account?{" "}
+            <Link to="/register" className="underline">Sign Up</Link>
+          </div>
         </CardContent>
       </Card>
     </div>

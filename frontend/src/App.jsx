@@ -5,6 +5,8 @@ import HomePage from './pages/HomePage';
 import WatchPage from './pages/WatchPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import LoginPage from './pages/LoginPage';
+import RegisterPage from './pages/RegisterPage';
+
 
 function App() {
   return (
@@ -18,6 +20,7 @@ function App() {
       </Route>
       {/* Separate route without the MainLayout */}
       <Route path="/login" element={<LoginPage />} />
+       <Route path="/register" element={<RegisterPage />} /> 
     </Routes>
   );
 }

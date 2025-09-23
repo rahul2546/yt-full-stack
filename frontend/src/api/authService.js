@@ -16,3 +16,18 @@ export const loginUser = async(credentials) => {
 		throw error; // Re-throw the error for further handling by thunk
 	}
 };
+
+/**
+ * @param {object} userData - the new user's data.
+ * @returns {Promise<object>} the new user data and token.
+ */
+
+export const registerUser = async (userData) => {
+	try{
+		const response = await api.post('/auth/register', userData);
+		return response.data; // Assuming the user data and token are in response.data
+	}catch (error) {
+		console.error('Error registering user:', error.response?.data || error.message);
+		throw error.response?.data; // Re-throw the error for further handling
+	}
+};
