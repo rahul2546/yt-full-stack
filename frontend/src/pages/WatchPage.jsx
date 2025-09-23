@@ -6,6 +6,8 @@ import VideoDetails from '@/components/VideoDetails';
 import { mockVideos } from '../mockData'; 
 import { getVideoById } from '../api/videoService';
 import RecommendedVideos from '@/components/RecommendedVideos';
+import CommentsSection from '@/components/CommentsSection';
+
 const WatchPage = () => {
   const { videoId } = useParams();
   const [video, setVideo] = useState(null);
@@ -64,7 +66,9 @@ const WatchPage = () => {
         <VideoPlayer url={videoUrl} />
         
         <div className="mt-4">          
-          <VideoDetails video={videoDetailsProps} />        
+          <VideoDetails video={videoDetailsProps} />  
+           <hr className="my-6" /> 
+          <CommentsSection videoId={videoId} />      
         </div>
       </div>
       

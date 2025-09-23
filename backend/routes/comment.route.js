@@ -17,11 +17,11 @@ router.post(
 );
 
 // @route  GET /api/v1/videos/:videoId/comment/allComments
-// @access Private
+// @access PUBLIC
 
 router.get(
     '/allComments',
-    validateUser, //🔐 protected route only registered user can access
+    //validateUser, //🔐 protected route only registered user can access
     getAllCommentsForVideo
 );
 
