@@ -1,6 +1,6 @@
 // src/components/CommentsSection.jsx
 import React, { useState, useEffect } from 'react';
-import { getCommentsByVideoId } from '../api/commentService'; // Import our new service function
+import { getCommentsByVideoId } from '../api/CommentService'; // Import our new service function
 import CommentList from './CommentList';
 import AddComment from './AddComment'; 
 

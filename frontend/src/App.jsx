@@ -4,6 +4,7 @@ import MainLayout from './layouts/MainLayout'; // Import the new layout
 import HomePage from './pages/HomePage';
 import WatchPage from './pages/WatchPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -15,6 +16,8 @@ function App() {
         <Route path="watch/:videoId" element={<WatchPage />} />
         <Route path="/results" element={<SearchResultsPage />} />
       </Route>
+      {/* Separate route without the MainLayout */}
+      <Route path="/login" element={<LoginPage />} />
     </Routes>
   );
 }

@@ -1,10 +1,12 @@
 // src/components/Header.jsx
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Menu, Youtube, Search, Video, Bell, Sun, Moon } from 'lucide-react';
+import { Menu, Youtube, Search, Video, Bell, Sun, Moon, LogIn } from 'lucide-react';
+import { useSelector, useDispatch } from 'react-redux';
+import { logout } from '@/store/authSlice';
 
 const Header = ({onMenuClick, theme, toggleTheme}) => {
 
@@ -18,6 +20,16 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
       navigate(`/results?search_query=${searchQuery.trim()}`);
     }
   };
+
+  // Auth logic
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
+
+  // logout handler
+  const handleLogout = () => {
+    dispatch(logout());
+    navigate('/'); // Redirect to homepage after logout 
+  }
 
   return (
     <header className="flex justify-between items-center p-4 border-b">
@@ -51,6 +63,8 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
 		 <Button onClick={toggleTheme} variant="ghost" size="icon">
           {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
         </Button>
+        {isAuthenticated ? (
+          <>
         <Button variant="ghost" size="icon">
           <Video className="h-6 w-6" />
         </Button>
@@ -61,6 +75,17 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
           <AvatarImage src="https://github.com/shadcn.png" alt="User Avatar" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
+         <Button onClick={handleLogout} variant="outline">Logout</Button>
+          </>
+        ) : (
+          <Link to="/login">
+             <Button variant="outline" className="flex items-center gap-2">
+              <LogIn className="h-5 w-5" />
+              Sign In
+            </Button>
+          </Link>
+        )}
+
       </div>
     </header>
   );

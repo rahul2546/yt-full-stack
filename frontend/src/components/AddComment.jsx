@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { postComment } from '../api/commentService'; // Import our new function
+import { postComment } from '../api/CommentService'; // Import our new function
 
 const AddComment = ({ videoId, onCommentPosted }) => {
   const [commentText, setCommentText] = useState('');
