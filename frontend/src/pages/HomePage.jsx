@@ -45,7 +45,7 @@ const HomePage = () => {
           postedAt: new Date(video.createdAt).toLocaleDateString(),
           channel: {
             name: video.uploader.username,
-            avatarUrl: 'https://github.com/shadcn.png', 
+            avatarUrl: video.uploader.profileImg || null,
           }
         };
         return <VideoCard key={video._id} video={videoCardProps} />;

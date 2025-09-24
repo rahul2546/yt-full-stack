@@ -3,31 +3,27 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import VideoPlayer from '@/components/VideoPlayer';
 import VideoDetails from '@/components/VideoDetails';
-import { mockVideos } from '../mockData'; 
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchVideoById } from '@/store/videoSlice';
 import { getVideoById } from '../api/videoService';
 import RecommendedVideos from '@/components/RecommendedVideos';
 import CommentsSection from '@/components/CommentsSection';
 
 const WatchPage = () => {
   const { videoId } = useParams();
-  const [video, setVideo] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  
+  const dispatch = useDispatch();
 
- useEffect(() => {
-  const fetchVideoData = async () => {
-    try{
-      setLoading(true); // Start loading
-      const fetchedVideo = await getVideoById(videoId);
-      setVideo(fetchedVideo);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false); // End loading
+  // Get all the video data, loading, and error states from the redux store
+
+  const { currentVideo, loading, error} = useSelector((state) => state.video);
+
+ // Fetch the video when the component mounts or the videoId changes
+  useEffect(() => {
+    if (videoId) {
+      dispatch(fetchVideoById(videoId));
     }
-  };
-  fetchVideoData();
- }, [videoId]); // Refetch if videoId changes
+  }, [dispatch, videoId]);
 
  // Handle loading state and error state
   if (loading) {
@@ -36,33 +32,20 @@ const WatchPage = () => {
   if (error) {
     return <div className="p-4 text-red-500">Error: {error}</div>;
   }
-  if (!video) {
+  if (!currentVideo) {
     return <div className="p-4">Video not found.</div>;
   }
 
-  // Construct the full video URL
-  //const videoUrl = video.videoUrl; // Assuming videoUrl is a full URL which came from own backend and can be directly used in VideoPlayer
-
  
-  const videoUrl = video.videoUrl; // e.g., "https://www.example.com/videos/video1.mp4"  
-
-  const videoDetailsProps = {
-    ...video, // Spread all video properties came from backend
-    channel : {
-      name: video.uploader.username,
-      avatarUrl: 'https://github.com/shadcn.png', // Placeholder avatar URL
-      subscriberCount: 1000 // Placeholder subscriber count 
-    }
-  };
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 p-4">
       <div className="w-full lg:w-2/3 ">
         {/* Pass the fully constructed URL to the player */}
-        <VideoPlayer url={videoUrl} />
+        <VideoPlayer url={currentVideo.videoUrl} />
         
         <div className="mt-4">          
-          <VideoDetails video={videoDetailsProps} />  
+          <VideoDetails video={currentVideo} />  
            <hr className="my-6" /> 
           <CommentsSection videoId={videoId} />      
         </div>
