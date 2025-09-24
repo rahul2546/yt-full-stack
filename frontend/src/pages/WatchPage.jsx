@@ -40,15 +40,11 @@ const WatchPage = () => {
     return <div className="p-4">Video not found.</div>;
   }
 
-    // --- DEBUGGING LINES START ---
-  console.log("Video object received from API:", video);
-  const videoUrl = video.videoUrl;
-  console.log("URL being passed to player:", videoUrl);
-  // --- DEBUGGING LINES END ---
-
-
   // Construct the full video URL
   //const videoUrl = video.videoUrl; // Assuming videoUrl is a full URL which came from own backend and can be directly used in VideoPlayer
+
+ 
+  const videoUrl = video.videoUrl; // e.g., "https://www.example.com/videos/video1.mp4"  
 
   const videoDetailsProps = {
     ...video, // Spread all video properties came from backend

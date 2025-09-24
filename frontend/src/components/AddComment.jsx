@@ -15,9 +15,9 @@ const AddComment = ({ videoId, onCommentPosted }) => {
 
     setIsSubmitting(true);
     try {
-      await postComment(videoId, commentText);
+      const newComment = await postComment(videoId, commentText);
       setCommentText(''); // Clear the input field
-      onCommentPosted(); // Tell the parent component to refresh the comments
+      onCommentPosted(newComment); // Pass the new comment to parent
     } catch (error) {
       console.error("Failed to post comment");
     } finally {

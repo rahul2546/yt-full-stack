@@ -25,6 +25,19 @@ const CommentsSection = ({ videoId }) => {
     fetchComments();
   }, [videoId]); // Re-fetch if the videoId changes
 
+  const handleCommentPosted = (newCommentData) => {
+    const newComment = {
+      ...newCommentData,
+      author: {
+        username: 'You', // Placeholder until we get user from Redux
+        avatarUrl: 'https://github.com/shadcn.png'
+      }
+  };
+
+
+    // Add the new comment to the top of the existing comments list
+    setComments(prevComments => [newComment, ...prevComments]);
+};
   if (loading) return <div>Loading comments...</div>;
   if (error) return <div className="text-red-500">Error loading comments.</div>;
 
@@ -32,7 +45,7 @@ const CommentsSection = ({ videoId }) => {
     <div className="mt-8">
       <h2 className="text-xl font-bold mb-4">{comments.length} Comments</h2>
       
-      <AddComment videoId={videoId} onCommentPosted={fetchComments} />
+      <AddComment videoId={videoId} onCommentPosted={handleCommentPosted} />
 
       <CommentList comments={comments} />
     </div>

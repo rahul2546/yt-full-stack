@@ -1,4 +1,7 @@
 // src/api/commentService.js
+
+import api from './axios';
+
 // NOTE: For now, this returns mock data. We will replace this with a real API call later.
 
 // This is the IDEAL data structure we want our backend to send.
@@ -44,30 +47,15 @@ export const getCommentsByVideoId = async (videoId) => {
   return mockComments;
 };
 
-// New function to post a comment
+//function to post a comment
+
 export const postComment = async (videoId, content) => {
-  try {
-    // In a real app, the currently logged-in user's ID would be sent.
-    // We are hardcoding a placeholder for now.
-    const authorId = '6835671fc05f3d064a041032'; // Placeholder author ID
+  try{
+    const response = await api.post(`/videos/${videoId}/comment/create`, { content});
 
-    console.log(`Posting comment to video ${videoId}:`, { content, author: authorId });
-
-    // LATER, WE WILL UNCOMMENT THIS TO MAKE A REAL API CALL:
-    // const response = await api.post(`/videos/${videoId}/comment`, { content });
-    // return response.data.data;
-    
-    // For now, let's return a mock response
-    return {
-      _id: `c${Date.now()}`,
-      content: content,
-      author: { username: 'You', avatarUrl: 'https://github.com/shadcn.png' },
-      createdAt: new Date().toISOString(),
-      replies: []
-    };
-
-  } catch (error) {
-    console.error("Error posting comment:", error);
-    throw error;
+    return response.data.data;
+  }catch(error){
+    console.error('Error posting comment:', error.response?.data || error.message);
+    throw error.response?.data || error;
   }
 };
