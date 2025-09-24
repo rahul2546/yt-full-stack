@@ -31,3 +31,14 @@ export const registerUser = async (userData) => {
 		throw error.response?.data; // Re-throw the error for further handling
 	}
 };
+
+export const getCurrentUser = async () => {
+  try {
+    // The token is automatically added by the interceptor
+    const response = await api.get('/auth/getProfile');
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error.response?.data || error.message);
+    throw error.response?.data || error;
+  }
+};

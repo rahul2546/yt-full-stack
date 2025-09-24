@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser, registerUser } from '../api/authService';
+import { loginUser, registerUser, getCurrentUser } from '../api/authService';
 
 // Async thunk for logging in user
 export const login = createAsyncThunk(
@@ -27,6 +27,26 @@ export const register = createAsyncThunk(
 		}	
 	}
 );
+
+// Thunk to fetch user data if a token exists in localStorage
+
+export const fetchUserOnLoad = createAsyncThunk(
+	'auth/fetchUserOnLoad',
+	async (_, { rejectWithValue }) => {
+		const token = localStorage.getItem('token');
+		if (!token) {
+			return rejectWithValue('No token found');
+		}
+
+		try {
+			const data = await getCurrentUser(token);
+			// Return user data with token
+			return { ...data, token };
+		} catch (error) {
+			return rejectWithValue(error.message || 'Failed to fetch user');
+		}
+	}
+)
 
 
 const initialState = {
@@ -91,6 +111,21 @@ const authSlice = createSlice({
 				state.isAuthenticated = false;
 				state.user = null;
 				state.token = null;
+			})
+			.addCase(fetchUserOnLoad.fulfilled, (state, action) => {
+				state.loading = false;
+				state.isAuthenticated = true;
+				state.user = action.payload;
+				state.token = action.payload.token; // Assuming the token is in payload from localStorage
+			})
+			.addCase(fetchUserOnLoad.rejected, (state, action) => {
+				state.loading = false;
+				state.isAuthenticated = false;
+				state.user = null;
+				state.token = null;
+				state.error = action.payload || 'Failed to fetch user'; // Set error message from rejectWithValue
+				localStorage.removeItem('token'); // Clear invalid token
+				console.log('No valid token found or failed to fetch user on load.', action.payload);
 			});
 	},
 });

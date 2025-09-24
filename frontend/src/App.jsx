@@ -6,9 +6,19 @@ import WatchPage from './pages/WatchPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { fetchUserOnLoad } from './store/authSlice'; // Import the thunk action
 
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Dispatch the thunk action to fetch user data on app load
+    dispatch(fetchUserOnLoad());
+  }, [dispatch]);
+
   return (
     <Routes>
       {/* All routes inside here will use the MainLayout */}
