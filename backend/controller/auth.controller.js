@@ -7,6 +7,7 @@ import APIResponse from '../utils/APIResponse.js';
 import { Video } from "../models/Video.model.js";
 import { Comment } from '../models/Comment.model.js';
 import path from 'path';
+import { Subscription } from '../models/Subscription.model.js'
 
 // @desc    Register a new user
 // @route   POST /api/auth/register
@@ -61,6 +62,7 @@ export const registerUser = async (req, res, next) => {
             username: user.username,
             email: user.email,
             token: generateToken(user._id),
+            subscription: [],
         });
 
     } catch (error) {
@@ -93,11 +95,20 @@ export const loginUser = async (req, res, next) => {
             throw new Error('Invalid email or password');
         }
 
+         //Now, find all subscriptions where this user is the subscriber
+    const userSubscriptions = await Subscription.find({ subscriber : user._id});
+
+    // Extract just the IDs of the channels they are subscribed to
+    const subscribedChannelIds = userSubscriptions.map(subscription => subscription.subscribedTo);
+
+
+
         res.status(200).json({
             _id: user._id,
             username: user.username,
             email: user.email,
             token: generateToken(user._id),
+            subscription: subscribedChannelIds,
         });
 
     } catch (error) {
@@ -111,8 +122,44 @@ export const loginUser = async (req, res, next) => {
 // @access Private
 
 // controllers/userController.js
-export const getProfile = (req, res) => {
-    res.status(200).json(req.user);
+export const getProfile = async (req, res) => {
+ try{
+    const userId = req.user?._id;
+    if(!userId){
+        return res.status(401).json({
+            success : false,
+            message: "Not authenticated"
+        })        
+    }
+
+    const user = await User.findById(userId).select("-password");
+
+    if(!user) {
+        return res.status(404).json({
+            success: false, message:"User not found"
+        });
+    }
+
+    //Now, find all subscriptions where this user is the subscriber
+    const userSubscriptions = await Subscription.find({ subscriber : userId});
+
+    // Extract just the IDs of the channels they are subscribed to
+    const subscribedChannelIds = userSubscriptions.map(subscription => subscription.subscribedTo);
+
+    const userProfile = {
+        ...user.toObject(),
+        subscription: subscribedChannelIds,
+    }
+    res.status(200).json({
+        statusCode: 200,
+        data: userProfile,
+        message: "User profile fetched successfully",
+        success: true,
+    });
+}catch(error){
+ console.error("Error fetching profile:", error);
+    return res.status(500).json({ success: false, message: "Internal server error" });
+}
 };
 
 // @desc Logout user

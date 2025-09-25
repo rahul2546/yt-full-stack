@@ -150,7 +150,12 @@ const toggleSubscription = async (req, res, next) => {
                 subscriber: subscriberId,
                 subscribedTo: subscribedToId,
             });
-            return res.status(201).json(new APIResponse(201, newSubscription, "Successfully subscribed to the user!"));
+
+            const subscribersCount = await Subscription.countDocuments({
+            subscribedTo: subscribedToId,
+        });
+
+            return res.status(201).json(new APIResponse(201,{res: newSubscription, count: subscribersCount}, "Successfully subscribed to the user!"));
         }
     } catch (error) {
         next(new APIError(500, error.message));

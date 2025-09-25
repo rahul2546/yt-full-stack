@@ -53,7 +53,7 @@ export const getAllCommentsForVideo = async (req, res, next) => {
         //console.log("Vedio ID:", videoId); // Debugging line to check video ID
 
         const comments = await Comment.find({ video: videoId })
-            .populate("author", "username") // Populate author field with user details
+            .populate("author", "username profileImg") // Populate author field with user details
             .sort({ createdAt: -1 }); // Sort comments by creation date in descending order or you can say that newest first
 
 
