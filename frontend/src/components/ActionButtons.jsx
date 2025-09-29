@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { ThumbsUp, ThumbsDown, Share2, Download } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleVideoLike, toggleVideoDislike } from '@/store/videoSlice';
+import { useNavigate } from 'react-router-dom';
 
 const ActionButtons = ({ video }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
   const { currentVideo } = useSelector((state) => state.video);
 
@@ -15,14 +17,22 @@ const ActionButtons = ({ video }) => {
   const isDisliked = currentVideo?.dislikes.includes(user?._id);
 
   const handleLike = () => {
-    if(user){
-    dispatch(toggleVideoLike(video._id));
+    if (user) {
+      dispatch(toggleVideoLike(video._id));
+    } else {
+      alert("Please log in to like this video.");
+      // A better UX would be to redirect them:
+       navigate('/login');
     }
   };
 
   const handleDislike = () => {
-    if(user){
+   if (user) {
       dispatch(toggleVideoDislike(video._id));
+    } else {
+      alert("Please log in to like this video.");
+      // A better UX would be to redirect them:
+      navigate('/login');
     }
   }
   return (

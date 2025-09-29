@@ -311,6 +311,8 @@ export const likeVideo = async (req, res, next) => {
 
         await video.save(); // Save the updated video document
 
+        await video.populate('uploader', 'username profileImg');
+
         return res.status(200).json(
             new APIResponse(200, video, "Video liked/unliked successfully")
         );
@@ -343,6 +345,8 @@ export const dislikeVideo = async (req, res, next) => {
         }
 
         await video.save(); // Save the updated video document
+
+        await video.populate('uploader', 'username profileImg');
 
         return res.status(200).json(
             new APIResponse(200, video, "Video disliked/undisliked successfully")
