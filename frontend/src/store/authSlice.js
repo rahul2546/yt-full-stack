@@ -1,5 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loginUser, registerUser, getCurrentUser } from '../api/authService';
+import { toggleSubscription } from '@/api/subscriptionService';
+import { fetchVideoById } from './videoSlice';
 
 // Async thunk for logging in user
 export const login = createAsyncThunk(
@@ -48,13 +50,29 @@ export const fetchUserOnLoad = createAsyncThunk(
 	}
 )
 
+export const toggleChannelSubscription = createAsyncThunk(
+	'auth/toggleSubscription',
+	async({ channelId, videoId }, { dispatch, rejectWithValue}) =>{
+		try {
+			await toggleSubscription(channelId);
+			// After a successful toggle, re-fetch the user's profile to get the updated list of subscriptions. This keeps our state perfectly in sync.
+			await dispatch(fetchUserOnLoad());
+			await dispatch(fetchVideoById(videoId));
+			return channelId;
+		} catch (error) {
+			return rejectWithValue(error.message);
+		}
+	}
+)
+
 
 const initialState = {
 	user: null, // Holds user data object
 	isAuthenticated: false, // Boolean to track auth status
 	token: null, // JWT token
 	loading: false, // To track loading state during async operations
-	error: null // To hold error messages
+	error: null, // To hold error messages
+	subscriptions:[],
 };
 
 const authSlice = createSlice({
@@ -74,60 +92,53 @@ const authSlice = createSlice({
 	},
 
 	// Handle async actions using extraReducers
-	extraReducers: (builder) => {
-		builder
-			.addCase(login.pending, (state) => {
-				state.loading = true;
-				state.error = null; // Clear previous errors
-			})
-			.addCase(login.fulfilled, (state, action) => {
-				state.loading = false;
-				state.isAuthenticated = true;
-				state.user = action.payload;
-				state.token = action.payload.token; // Assuming the token is in payload
-				localStorage.setItem('token', action.payload.token); // Store token in localStorage 
-			})
-			.addCase(login.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload || 'Login failed'; // Set error message from rejectWithValue
-				state.isAuthenticated = false;
-				state.user = null;
-				state.token = null;
-			})
-			.addCase(register.pending, (state) => {
-				state.loading = true;
-				state.error = null; // Clear previous errors
-			})
-			.addCase(register.fulfilled, (state, action) => {
-				state.loading = false;
-				state.isAuthenticated = true;
-				state.user = action.payload;
-				state.token = action.payload.token; // Assuming the token is in payload
-				localStorage.setItem('token', action.payload.token); // Store token in localStorage 
-			})
-			.addCase(register.rejected, (state, action) => {
-				state.loading = false;
-				state.error = action.payload || 'Registration failed'; // Set error message from rejectWithValue
-				state.isAuthenticated = false;
-				state.user = null;
-				state.token = null;
-			})
-			.addCase(fetchUserOnLoad.fulfilled, (state, action) => {
-				state.loading = false;
-				state.isAuthenticated = true;
-				state.user = action.payload;
-				state.token = action.payload.token; // Assuming the token is in payload from localStorage
-			})
-			.addCase(fetchUserOnLoad.rejected, (state, action) => {
-				state.loading = false;
-				state.isAuthenticated = false;
-				state.user = null;
-				state.token = null;
-				state.error = action.payload || 'Failed to fetch user'; // Set error message from rejectWithValue
-				localStorage.removeItem('token'); // Clear invalid token
-				console.log('No valid token found or failed to fetch user on load.', action.payload);
-			});
-	},
+ extraReducers: (builder) => {
+    builder
+      // --- THIS IS THE KEY FIX ---
+      // This matcher runs for any successful login, register, or session fetch
+      .addMatcher(
+        (action) => [login.fulfilled.type, register.fulfilled.type, fetchUserOnLoad.fulfilled.type].includes(action.type),
+        (state, action) => {
+          state.loading = false;
+          state.isAuthenticated = true;
+          
+          // Check if the user data is nested in a 'data' property, which it is for getProfile.
+          const userData = action.payload.data ? action.payload.data : action.payload;
+          
+          state.user = userData;
+          state.token = userData.token || action.payload.token; // Get token from wherever it is
+          
+          // Correctly access the nested subscriptions array
+          state.subscriptions = userData.subscriptions || [];
+          
+          // Ensure token is saved to localStorage
+          if (state.token) {
+            localStorage.setItem('token', state.token);
+          }
+        }
+      )
+      // Handles the pending state for login/register
+      .addMatcher(
+        (action) => [login.pending.type, register.pending.type].includes(action.type),
+        (state) => {
+          state.loading = true;
+          state.error = null;
+        }
+      )
+      // Handles any failed auth action
+      .addMatcher(
+        (action) => [login.rejected.type, register.rejected.type, fetchUserOnLoad.rejected.type].includes(action.type),
+        (state, action) => {
+          state.loading = false;
+          state.error = action.payload;
+          state.isAuthenticated = false;
+          state.user = null;
+          state.token = null;
+          state.subscriptions = [];
+          localStorage.removeItem('token');
+        }
+      );
+  },
 });
 export const { logout } = authSlice.actions;
 export default authSlice.reducer;

@@ -62,7 +62,7 @@ export const registerUser = async (req, res, next) => {
             username: user.username,
             email: user.email,
             token: generateToken(user._id),
-            subscription: [],
+            subscriptions: [],
         });
 
     } catch (error) {
@@ -108,7 +108,7 @@ export const loginUser = async (req, res, next) => {
             username: user.username,
             email: user.email,
             token: generateToken(user._id),
-            subscription: subscribedChannelIds,
+            subscriptions: subscribedChannelIds,
         });
 
     } catch (error) {
@@ -148,7 +148,7 @@ export const getProfile = async (req, res) => {
 
     const userProfile = {
         ...user.toObject(),
-        subscription: subscribedChannelIds,
+        subscriptions: subscribedChannelIds,
     }
     res.status(200).json({
         statusCode: 200,

@@ -27,7 +27,7 @@ const VideoCard = ({ video, layout = 'grid' }) => {
           {!isListLayout && (
             <Avatar>
               <AvatarImage src={video.channel.avatarUrl} alt={video.channel.name} />
-              <AvatarFallback>{video.channel.name.charAt(0)}</AvatarFallback>
+              <AvatarFallback>{video.channel.name.charAt(0).toUpperCase()}</AvatarFallback>
             </Avatar>
           )}
 

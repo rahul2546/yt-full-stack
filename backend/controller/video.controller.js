@@ -3,6 +3,7 @@ import APIError from "../utils/APIError.js";
 import APIResponse from "../utils/APIResponse.js";
 import { Video } from "../models/Video.model.js";
 import { Comment } from "../models/Comment.model.js";
+import { Subscription } from "../models/Subscription.model.js"
 
 export const uploadVideo = async (req, res, next) => {
     try {
@@ -103,8 +104,21 @@ export const getVideoById = async (req, res, next) => {
         if (!video) {
             throw new APIError(404, "Video not found!");
         }
+
+        const uploaderId = video.uploader._id;
+        const subscriberCount = await Subscription.countDocuments({subscribedTo : uploaderId})
+
+        const populatedUploader = {
+            ...video.uploader.toObject(),
+            subscriberCount: subscriberCount,
+        }
+
+        const finalVideoData = {
+            ...video.toObject(),
+            uploader: populatedUploader,
+        };
         return res.status(200).json(
-            new APIResponse(200, video, "Video fetched successfully")
+            new APIResponse(200, finalVideoData, "Video fetched successfully")
         );
 
 

@@ -26,12 +26,8 @@ const WatchPage = () => {
   }, [dispatch, videoId]);
 
  // Handle loading state and error state
-  if (loading) {
-    return <div className="p-4">Loading video...</div>;
-  }
-  if (error) {
-    return <div className="p-4 text-red-500">Error: {error}</div>;
-  }
+  if (loading && !currentVideo) return <div className="p-4">Loading video...</div>;
+  if (error && !currentVideo) return <div className="p-4 text-red-500">Error: {error}</div>;
   if (!currentVideo) {
     return <div className="p-4">Video not found.</div>;
   }
@@ -45,7 +41,7 @@ const WatchPage = () => {
         <VideoPlayer url={currentVideo.videoUrl} />
         
         <div className="mt-4">          
-          <VideoDetails video={currentVideo} />  
+          <VideoDetails video={currentVideo} videoId={videoId} />  
            <hr className="my-6" /> 
           <CommentsSection videoId={videoId} />      
         </div>
