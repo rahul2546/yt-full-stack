@@ -1,5 +1,29 @@
 import api from './axios';
 
+/**
+ * Uploads a video.
+ * @param {FormData} formData - The FormData object containing video, thumbnail, title, etc.
+ * @param {Function} onUploadProgress - Callback to report upload progress.
+ * @returns {Promise<object>} The newly created video object.
+ */
+export const uploadVideo = async (formData, onUploadProgress) => {
+  try {
+    const response = await api.post('/video/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        onUploadProgress(percentCompleted);
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error uploading video:", error);
+    throw error;
+  }
+};
+
 // Fetch all videos
 export const fetchAllVideos = async () => {
 	try {

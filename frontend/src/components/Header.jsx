@@ -65,9 +65,11 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
         </Button>
         {isAuthenticated ? (
           <>
-        <Button variant="ghost" size="icon">
-          <Video className="h-6 w-6" />
-        </Button>
+        <Link to="/upload-video">
+      <Button variant="ghost" size="icon">
+        <Video className="h-6 w-6" />
+      </Button>
+        </Link>
         <Button variant="ghost" size="icon">
           <Bell className="h-6 w-6" />
         </Button>

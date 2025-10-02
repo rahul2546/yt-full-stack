@@ -2,11 +2,14 @@
 import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice'; // Import the reducer from our auth slice
 import videoReducer from './videoSlice';
+import uploadReducer from './uploadSlice';
+import { Upload } from 'lucide-react';
 
 export const store = configureStore({
   reducer: {
     // We register our slices here
     auth: authReducer,
-    video: videoReducer
+    video: videoReducer,
+    upload: uploadReducer,
   },
 });

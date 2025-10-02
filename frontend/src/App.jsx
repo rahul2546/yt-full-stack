@@ -9,6 +9,7 @@ import RegisterPage from './pages/RegisterPage';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { fetchUserOnLoad } from './store/authSlice'; // Import the thunk action
+import UploadPage from './pages/UploadPage';
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="watch/:videoId" element={<WatchPage />} />
         <Route path="/results" element={<SearchResultsPage />} />
+         <Route path="/upload-video" element={<UploadPage />} />  
       </Route>
       {/* Separate route without the MainLayout */}
       <Route path="/login" element={<LoginPage />} />

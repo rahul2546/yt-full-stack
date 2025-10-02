@@ -7,6 +7,9 @@ import { Subscription } from "../models/Subscription.model.js"
 
 export const uploadVideo = async (req, res, next) => {
     try {
+         console.log("--- AUTHENTICATED USER ---", req.user);
+         console.log("--- REQUEST BODY ---", req.body);
+        console.log("--- REQUEST FILES ---", req.files);
         const { title, description } = req.body;
         const userId = req.user._id; // Assuming user ID is stored in req.user from validateUser middleware
         //  console.log("User ID:", userId); // Debugging line to check user ID
@@ -42,12 +45,13 @@ export const uploadVideo = async (req, res, next) => {
 
         let tags = [];
         if (req.body.tags) {
-            tags = req.body.tags
-                .split(",")
-                .map((tag) => tag.trim())
-                .filter((tag) => tag !== "")
-                ; // Split tags by comma, trim whitespace, and filter out empty tags
-
+            if (typeof req.body.tags === 'string') {
+                // If tags is a string (e.g., from Postman: "nature,heal"), split it
+                tags = req.body.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+            } else if (Array.isArray(req.body.tags)) {
+                // If tags is already an array (from our React app), use it directly
+                tags = req.body.tags;
+            }
         }
         
 
