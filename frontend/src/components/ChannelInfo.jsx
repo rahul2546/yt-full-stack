@@ -16,11 +16,7 @@ const ChannelInfo = ({ channel, videoId }) => {
 
   const { currentVideo } = useSelector((state) => state.video);
   
-   // --- START DEBUGGING LOGS ---
-  console.log("--- ChannelInfo DEBUG ---");
-  console.log("Channel ID to check:", channel?._id);
-  console.log("User's Subscriptions Array from Redux:", subscriptions);
-  // --- END DEBUGGING LOGS ---
+  
 
   const isSubscribed = subscriptions?.includes(channel._id);
   

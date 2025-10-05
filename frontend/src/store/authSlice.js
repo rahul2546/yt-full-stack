@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { loginUser, registerUser, getCurrentUser } from '../api/authService';
 import { toggleSubscription } from '@/api/subscriptionService';
 import { fetchVideoById } from './videoSlice';
+import { getWatchLaterVideos, toggleWatchLater } from '@/api/userService';
 
 // Async thunk for logging in user
 export const login = createAsyncThunk(
@@ -65,6 +66,23 @@ export const toggleChannelSubscription = createAsyncThunk(
 	}
 )
 
+export const fetchWatchLater = createAsyncThunk(
+	'auth/fetchWatchLater',
+	async () => {
+		return await getWatchLaterVideos();
+	}
+);
+
+export const toggleWatchLaterVideo = createAsyncThunk(
+	'auth/toggleWatchLater',
+	async (videoId, { dispatch }) => {
+		const response = await toggleWatchLater(videoId);
+		// After toggling, re-fetch the list to ensure the state is in sync
+		await dispatch(fetchWatchLater());
+		return { videoId, message: response.message };
+	}
+);
+
 
 const initialState = {
 	user: null, // Holds user data object
@@ -73,6 +91,7 @@ const initialState = {
 	loading: false, // To track loading state during async operations
 	error: null, // To hold error messages
 	subscriptions:[],
+	watchLater: [],
 };
 
 const authSlice = createSlice({
@@ -96,6 +115,9 @@ const authSlice = createSlice({
     builder
       // --- THIS IS THE KEY FIX ---
       // This matcher runs for any successful login, register, or session fetch
+	   .addCase(fetchWatchLater.fulfilled, (state, action) => {
+        state.watchLater = action.payload;
+      })
       .addMatcher(
         (action) => [login.fulfilled.type, register.fulfilled.type, fetchUserOnLoad.fulfilled.type].includes(action.type),
         (state, action) => {
@@ -137,7 +159,7 @@ const authSlice = createSlice({
           state.subscriptions = [];
           localStorage.removeItem('token');
         }
-      );
+      );	  
   },
 });
 export const { logout } = authSlice.actions;

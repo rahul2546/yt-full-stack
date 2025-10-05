@@ -1,15 +1,19 @@
 // src/components/ActionButtons.jsx
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ThumbsUp, ThumbsDown, Share2, Download } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, Share2, Download, Clock } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toggleVideoLike, toggleVideoDislike } from '@/store/videoSlice';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import { toggleWatchLaterVideo } from '@/store/authSlice';
 
 const ActionButtons = ({ video }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { user } = useSelector((state) => state.auth);
+  
+
+  const { user, watchLater } = useSelector((state) => state.auth);
   const { currentVideo } = useSelector((state) => state.video);
 
   const isLiked = currentVideo?.likes.includes(user?._id);
@@ -35,6 +39,21 @@ const ActionButtons = ({ video }) => {
       navigate('/login');
     }
   }
+
+  const isInWatchLater = watchLater?.some((item) => item._id === video._id);
+
+  const handleWatchLater = () => {
+    if (user) {
+      dispatch(toggleWatchLaterVideo(video._id)).then((result) => {
+        if(toggleWatchLaterVideo.fulfilled.match(result)){
+          // show toast notification
+          toast(result.payload.message);
+        }
+      });
+    } else {
+      alert("Please log in to add this video to Watch Later.");
+    };
+  }
   return (
     <div className="flex items-center gap-2">
       {/* Like/Dislike Buttons */}
@@ -48,6 +67,13 @@ const ActionButtons = ({ video }) => {
           <ThumbsDown className={`h-5 w-5 ${isDisliked ? 'fill-current ' : ''}`} />
         </Button>
       </div>
+
+      {/* Watch Later Button */}
+       <Button variant="ghost" className="rounded-full flex items-center gap-2" onClick={handleWatchLater}>
+        {/* 6. Add the Save button */}
+        <Clock className={`h-5 w-5 ${isInWatchLater ? 'fill-current' : ''}`} />
+        <span>{isInWatchLater ? 'Saved' : 'Save'}</span>
+      </Button>
       
       {/* Share Button */}
       <Button variant="ghost" className="rounded-full flex items-center gap-2">

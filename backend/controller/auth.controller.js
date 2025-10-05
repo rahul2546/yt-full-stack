@@ -256,67 +256,120 @@ export const updateUser = async (req, res, next) => {
 
 // Add a video to watch later list
 
-export const addToWatchLater = async (req, res, next) => {
+// export const addToWatchLater = async (req, res, next) => {
+//     try {
+//         const { videoId } = req.body; // Get videoId from request body
+
+//         if (!videoId) {
+//             return res.status(400).json(new APIError(400, "Video ID is required"));
+//         }
+
+//         const user = await User.findById(req.user._id); // Get the authenticated user
+
+//         if (!user) {
+//             return res.status(404).json(new APIError(404, "User not found"));
+//         }
+
+//         if (!user.watchLater.includes(videoId)) {
+//             // Check if the video is already in watch later
+//             user.watchLater.push(videoId); // Add videoId to watchLater array
+//             await user.save(); // Save the updated user document
+//         }
+
+//         return res.status(200).json(
+//             new APIResponse(200, user.watchLater, "Video added to watch later successfully")
+//         );
+
+//     } catch (error) {
+//         next(new APIError(500, "Error adding video to watch later", error));
+
+//     }
+// };
+
+// // Remove a video from watch later list
+
+// export const removeFromWatchLater = async (req, res, next) => {
+//     try {
+//         const { videoId } = req.body; // Get videoId from request body
+
+//         if (!videoId) {
+//             return res.status(400).json(new APIError(400, "Video ID is required"));
+//         }
+
+//         const user = await User.findById(req.user._id); // Get the authenticated user
+
+//         if (!user) {
+//             return res.status(404).json(new APIError(404, "User not found"));
+//         }
+
+//         const videoIndex = user.watchLater.indexOf(videoId); // Find the index of the videoId in watchLater array
+
+//         if (videoIndex > -1) {
+//             user.watchLater.splice(videoIndex, 1); // Remove the videoId from watchLater array
+//             await user.save(); // Save the updated user document
+//         } else {
+//             return res.status(404).json(new APIError(404, "Video not found in watch later"));
+//         }
+
+//         return res.status(200).json(
+//             new APIResponse(200, user.watchLater, "Video removed from watch later successfully")
+//         );
+//     } catch (error) {
+//         next(new APIError(500, "Error removing video from watch later", error));
+
+//     }
+// };
+
+// single function to handle toggle functionality
+
+// You can replace your two functions with this one
+
+export const toggleWatchLater = async (req, res, next) => {
     try {
-        const { videoId } = req.body; // Get videoId from request body
+        // It's more standard to get the ID from URL params for this kind of action
+        const { videoId } = req.params; 
+        const userId = req.user._id;
 
         if (!videoId) {
-            return res.status(400).json(new APIError(400, "Video ID is required"));
+            return next(new APIError(400, "Video ID is required"));
         }
 
-        const user = await User.findById(req.user._id); // Get the authenticated user
+        // Find the user to check their current watchLater list
+        const user = await User.findById(userId);
 
         if (!user) {
-            return res.status(404).json(new APIError(404, "User not found"));
+            return next(new APIError(404, "User not found"));
         }
 
-        if (!user.watchLater.includes(videoId)) {
-            // Check if the video is already in watch later
-            user.watchLater.push(videoId); // Add videoId to watchLater array
-            await user.save(); // Save the updated user document
-        }
+        const isAlreadyInWatchLater = user.watchLater.includes(videoId);
 
-        return res.status(200).json(
-            new APIResponse(200, user.watchLater, "Video added to watch later successfully")
-        );
+        let updatedUser;
+        let message;
 
-    } catch (error) {
-        next(new APIError(500, "Error adding video to watch later", error));
-
-    }
-};
-
-// Remove a video from watch later list
-
-export const removeFromWatchLater = async (req, res, next) => {
-    try {
-        const { videoId } = req.body; // Get videoId from request body
-
-        if (!videoId) {
-            return res.status(400).json(new APIError(400, "Video ID is required"));
-        }
-
-        const user = await User.findById(req.user._id); // Get the authenticated user
-
-        if (!user) {
-            return res.status(404).json(new APIError(404, "User not found"));
-        }
-
-        const videoIndex = user.watchLater.indexOf(videoId); // Find the index of the videoId in watchLater array
-
-        if (videoIndex > -1) {
-            user.watchLater.splice(videoIndex, 1); // Remove the videoId from watchLater array
-            await user.save(); // Save the updated user document
+        if (isAlreadyInWatchLater) {
+            // If the video is already in the list, remove it using the $pull operator
+            updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { $pull: { watchLater: videoId } },
+                { new: true } // This option returns the updated user document
+            ).select("watchLater"); // We only need the watchLater array back
+            message = "Removed from Watch Later";
         } else {
-            return res.status(404).json(new APIError(404, "Video not found in watch later"));
+            // If the video is not in the list, add it using $addToSet (prevents duplicates)
+            updatedUser = await User.findByIdAndUpdate(
+                userId,
+                { $addToSet: { watchLater: videoId } },
+                { new: true }
+            ).select("watchLater");
+            message = "Added to Watch Later";
         }
-
+        
         return res.status(200).json(
-            new APIResponse(200, user.watchLater, "Video removed from watch later successfully")
+            new APIResponse(200, { watchLater: updatedUser.watchLater }, message)
         );
-    } catch (error) {
-        next(new APIError(500, "Error removing video from watch later", error));
 
+    } catch (error) {
+        next(new APIError(500, "Error toggling Watch Later status", error));
     }
 };
 

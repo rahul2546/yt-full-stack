@@ -1,7 +1,8 @@
 // src/components/Sidebar.jsx
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { Home, Flame, Video, History, Clapperboard, Library, ChevronDown } from 'lucide-react';
+import { Home, Flame, Video, History, Clapperboard, Library, ChevronDown, Clock } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 const mainLinks = [
   { icon: Home, text: 'Home' },
@@ -42,6 +43,14 @@ const Sidebar = ({ isOpen }) => {
             {isOpen && <span>{link.text}</span>}
           </Button>
         ))}
+        <hr className="my-4" />
+        <Link to="/feed/watch-later">
+          <Button variant="ghost" className="flex items-center justify-start gap-4 w-full">
+            <Clock className="h-6 w-6" />
+            {isOpen && <span>Watch Later</span>}
+          </Button>
+        </Link>
+
       </nav>
     </aside>
   );

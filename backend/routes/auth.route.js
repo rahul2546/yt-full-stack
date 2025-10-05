@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerUser, loginUser, getProfile, logoutUser, deleteUser, updateUser, addToWatchLater, getWatchLaterVideos, removeFromWatchLater, addToHistory, getHistory, clearHistory } from '../controller/auth.controller.js';
+import { registerUser, loginUser, getProfile, logoutUser, deleteUser, updateUser,  getWatchLaterVideos,  addToHistory, getHistory, clearHistory, toggleWatchLater } from '../controller/auth.controller.js';
 import validateUser from '../middleware/validateUser.middleware.js';
 
 const router = express.Router();
@@ -52,13 +52,13 @@ router.put(
      updateUser
 );
 
-// @route  POST /api/v1/auth/watch-later
+// @route  POST /api/v1/auth/watch-later/toggleVideo/:videoId
 // @access Private
 
 router.post(
-    '/watch-later',
+    '/watch-later/toggleVideo/:videoId',
     validateUser, // 🔐 Protected Route
-    addToWatchLater
+    toggleWatchLater 
 )
 
 // @route  GET /api/v1/auth/watch-later
@@ -73,11 +73,11 @@ router.get(
 // @route  DELETE /api/v1/auth/watch-later
 // @access Private
 
-router.delete(
-    '/watch-later',
-    validateUser, // 🔐 Protected Route
-    removeFromWatchLater
-)
+// router.delete(
+//     '/watch-later',
+//     validateUser, // 🔐 Protected Route
+//     removeFromWatchLater
+// ) // no need of this route beacuse we handled both add and remove video in single toggle function
 
 // @route  POST /api/v1/auth/history
 // @access Private

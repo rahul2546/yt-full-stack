@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom'; // Important: Outlet is the placeholder for page content
 import Header from '@/components/Header';
 import Sidebar from '@/components/Sidebar';
+import { Toaster } from "@/components/ui/sonner"
 
 
 const MainLayout = () => {
@@ -43,6 +44,7 @@ const MainLayout = () => {
           <Outlet /> {/* Child routes like HomePage and WatchPage will be rendered here */}
         </main>
       </div>
+      <Toaster />
     </div>
   );
 };
