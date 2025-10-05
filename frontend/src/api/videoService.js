@@ -66,3 +66,20 @@ export const toggleDislike = async (videoId) => {
 		throw error;
 	}
 }
+
+export const getMyVideos = async (userId) => {
+  try {
+   
+    if(!userId){
+      console.log("No user found, cannot fetch user videos.");
+      return [];
+    }
+
+    const response = await api.get(`/video/channel/${userId}`);
+    return response.data.data;
+    
+  } catch (error) {
+    console.error("Error fetching user's videos:", error);
+    throw error;
+  }
+}

@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserOnLoad, fetchWatchLater } from './store/authSlice'; // Import the thunk action
 import UploadPage from './pages/UploadPage';
 import WatchLaterPage from './pages/WatchLater';
+import YourVideosPage from './pages/YourVideosPage';
 
 
 function App() {
@@ -41,6 +42,7 @@ const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
         <Route path="/results" element={<SearchResultsPage />} />
         <Route path="/upload-video" element={<UploadPage />} />
         <Route path="/feed/watch-later" element={<WatchLaterPage />} />
+        <Route path="/your-videos" element={<YourVideosPage />} />
 
       </Route>
       {/* Separate route without the MainLayout */}

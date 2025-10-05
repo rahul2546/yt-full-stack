@@ -1,0 +1,85 @@
+// src/pages/YourVideosPage.jsx
+import React, { useState, useEffect } from 'react';
+import { getMyVideos } from '../api/videoService';
+import VideoCard from '@/components/VideoCard';
+import { Button } from '@/components/ui/button';
+import { Pencil, Trash2 } from 'lucide-react';
+import { useSelector } from 'react-redux';
+
+const YourVideosPage = () => {
+  const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+   const { user } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    // 3. Only run the fetch if the user ID exists
+    if (user?._id) {
+      const fetchUserVideos = async () => {
+        try {
+          // 4. Pass the user's ID to the service function
+          const userVideos = await getMyVideos(user._id);
+          setVideos(userVideos);
+        } catch (err) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
+      fetchUserVideos();
+    } else {
+      // If there's no user, stop loading and show nothing.
+      setLoading(false);
+    }
+  }, [user]); // 5. Re-run this effect if the user object changes
+
+
+  if (loading) return <div className="p-4">Loading your videos...</div>;
+  if (error) return <div className="p-4 text-red-500">Error: {error}</div>;
+
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-6">Your Videos</h1>
+      <div className="flex flex-col gap-4">
+        {videos.length > 0 ? (
+          videos.map(video => {
+            // --- THIS IS THE ADAPTER LOGIC ---
+            // We transform the data to the shape our VideoCard expects
+            const videoCardProps = {
+                id: video._id,
+                title: video.title,
+                thumbnailUrl: video.thumbnailUrl,
+                views: video.views,
+                postedAt: new Date(video.createdAt).toLocaleDateString(),
+                channel: {
+                    name: video.uploader.username,
+                    avatarUrl: video.uploader.profileImg || null,
+                }
+            };
+            
+            return (
+              <div key={video._id} className="flex items-center gap-4 border-b pb-4">
+                <div className="flex-1">
+                  <VideoCard video={videoCardProps} layout="list" />
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2">
+                  <Button variant="outline" size="sm" className="flex items-center gap-2">
+                    <Pencil className="h-4 w-4" /> <span>Edit</span>
+                  </Button>
+                  <Button variant="destructive" size="sm" className="flex items-center gap-2">
+                    <Trash2 className="h-4 w-4" /> <span>Delete</span>
+                  </Button>
+                </div>
+              </div>
+            );
+          })
+        ) : (
+          <p>You haven't uploaded any videos yet.</p>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default YourVideosPage;

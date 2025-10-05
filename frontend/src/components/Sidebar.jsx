@@ -13,7 +13,7 @@ const mainLinks = [
 const libraryLinks = [
   { icon: Library, text: 'Library' },
   { icon: History, text: 'History' },
-  { icon: Video, text: 'Your videos' },
+
 ];
 
 const Sidebar = ({ isOpen }) => {
@@ -43,6 +43,12 @@ const Sidebar = ({ isOpen }) => {
             {isOpen && <span>{link.text}</span>}
           </Button>
         ))}
+        <Link to="/your-videos">
+          <Button variant="ghost" className="flex items-center justify-start gap-4 w-full">
+            <Video className="h-6 w-6" />
+            {isOpen && <span>Your Videos</span>}
+          </Button>
+        </Link>
         <hr className="my-4" />
         <Link to="/feed/watch-later">
           <Button variant="ghost" className="flex items-center justify-start gap-4 w-full">

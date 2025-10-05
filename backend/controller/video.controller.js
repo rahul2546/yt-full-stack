@@ -143,7 +143,7 @@ export const getChannelVideos = async (req, res, next) => {
             uploader: channelId,
             isPublished: true
         }) // Fetch videos uploaded by the channel
-            .populate("uploader", "username") // Populate uploader field with user details
+            .populate("uploader", "username profileImg") // Populate uploader field with user details
             .sort({ createdAt: -1 }); // latest videos first
 
         if (!videos || videos.length === 0) {
