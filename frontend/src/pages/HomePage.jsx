@@ -44,6 +44,7 @@ const HomePage = () => {
           views: video.views,
           postedAt: new Date(video.createdAt).toLocaleDateString(),
           channel: {
+            channelId: video.uploader._id,
             name: video.uploader.username,
             avatarUrl: video.uploader.profileImg || null,
           }

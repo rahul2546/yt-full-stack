@@ -3,7 +3,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from './authSlice'; // Import the reducer from our auth slice
 import videoReducer from './videoSlice';
 import uploadReducer from './uploadSlice';
-import { Upload } from 'lucide-react';
+import channelReducer from './channelSlice';
 
 export const store = configureStore({
   reducer: {
@@ -11,5 +11,6 @@ export const store = configureStore({
     auth: authReducer,
     video: videoReducer,
     upload: uploadReducer,
+    channel: channelReducer,
   },
 });

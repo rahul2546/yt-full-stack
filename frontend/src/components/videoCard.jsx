@@ -8,6 +8,9 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Clock, Check } from 'lucide-react';
 
+// TODO: the UI of watch later button needs to be fixed it is not in sync
+// TODO: here there is a hydration issue beacuse we are wrapping the whole card in a Link and then also wrapping channel name in link.Fix it.
+
 const VideoCard = ({ video, layout = 'grid' }) => {
 
 
@@ -48,14 +51,14 @@ const VideoCard = ({ video, layout = 'grid' }) => {
       {/* The main container is now a simple div, which correctly applies the flex style */}
       <div className={containerClasses}>
         <div className="relative group">
-        <img
-          src={video.thumbnailUrl}
-          alt={video.title}
-          className={`aspect-video object-cover ${thumbnailClasses}`}
-        />
+          <img
+            src={video.thumbnailUrl}
+            alt={video.title}
+            className={`aspect-video object-cover ${thumbnailClasses}`}
+          />
 
-         <Button 
-            size="icon" 
+          <Button
+            size="icon"
             className="absolute top-2 right-2 hidden group-hover:flex 
                        bg-black/60 hover:bg-black/70 
                        dark:bg-white/10 dark:hover:bg-white/20" // <-- STYLE FIX HERE
@@ -64,28 +67,30 @@ const VideoCard = ({ video, layout = 'grid' }) => {
           >
             {isInWatchLater ? <Check className="h-5 w-5" /> : <Clock className="h-5 w-5" />}
           </Button>
-      </div>
+        </div>
 
-      <div className="flex items-start gap-4 mt-3">
-        {/* Hide avatar in list view for a cleaner look */}
-        {!isListLayout && (
-          <Avatar>
-            <AvatarImage src={video.channel.avatarUrl} alt={video.channel.name} />
-            <AvatarFallback>{video.channel.name.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-        )}
+        <div className="flex items-start gap-4 mt-3">
+          {/* Hide avatar in list view for a cleaner look */}
+          {!isListLayout && (
+            <Avatar>
+              <AvatarImage src={video.channel.avatarUrl} alt={video.channel.name} />
+              <AvatarFallback>{video.channel.name.charAt(0).toUpperCase()}</AvatarFallback>
+            </Avatar>
+          )}
 
-        <div className={textContainerClasses}>
-          <h3 className="font-semibold leading-tight line-clamp-2">
-            {video.title}
-          </h3>
-          <p className="text-xs text-gray-500 mt-1">{video.channel.name}</p>
-          <p className="text-sm text-gray-500">
-            {video.views} views • {video.postedAt}
-          </p>
+          <div className={textContainerClasses}>
+            <h3 className="font-semibold leading-tight line-clamp-2">
+              {video.title}
+            </h3>
+            <Link to={`/channel/${video.channel.channelId}`} onClick={(e) => e.stopPropagation()}>
+              <p className="text-sm text-gray-500 mt-1 hover:text-primary">{video.channel.name}</p>
+            </Link>
+            <p className="text-sm text-gray-500">
+              {video.views} views • {video.postedAt}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
     </Link >
   );
 };

@@ -1,6 +1,6 @@
 // src/pages/YourVideosPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getMyVideos } from '../api/videoService';
+import { getChannelVideos } from '../api/videoService';
 import VideoCard from '@/components/VideoCard';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
@@ -19,7 +19,7 @@ const YourVideosPage = () => {
       const fetchUserVideos = async () => {
         try {
           // 4. Pass the user's ID to the service function
-          const userVideos = await getMyVideos(user._id);
+          const userVideos = await getChannelVideos(user._id);
           setVideos(userVideos);
         } catch (err) {
           setError(err.message);

@@ -78,8 +78,9 @@ export const uploadVideo = async (req, res, next) => {
 export const getAllVideos = async (_, res, next) => {
     try {
         const videos = await Video.find({})
-            .populate("uploader", "username profileImg")// Populate uploader field with user details
-            .sort({ createdAt: -1 }); // Sort videos by creation date in descending order
+            .populate("uploader", "_id username profileImg")// Populate uploader field with user details
+            .sort({ createdAt: -1 }); 
+            // Sort videos by creation date in descending order
         //console.log(videos);
 
         return res
@@ -103,7 +104,7 @@ export const getVideoById = async (req, res, next) => {
         const { videoId } = req.params; // Get videoId from request parameters
 
         const video = await Video.findById(videoId)
-            .populate("uploader", "username profileImg"); //Populate uploader field with user details
+            .populate("uploader", "_id username profileImg"); //Populate uploader field with user details
 
         if (!video) {
             throw new APIError(404, "Video not found!");

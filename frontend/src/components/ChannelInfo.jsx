@@ -3,7 +3,7 @@ import React from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { useSelector, useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { toggleChannelSubscription } from '@/store/authSlice';
 
 
@@ -29,16 +29,20 @@ const ChannelInfo = ({ channel, videoId }) => {
       navigate('/login');
     }
   };
+  const channelName = channel?.name || channel?.username || 'U';
+  const fallbackInitial = channelName.charAt(0).toUpperCase();
   return (
     <div className="flex items-center justify-between">
       {/* Left side: Avatar and Name */}
       <div className="flex items-center gap-4">
         <Avatar className="h-10 w-10">
           <AvatarImage src={channel.avatarUrl} alt={channel.name} />
-          <AvatarFallback>{channel.name.charAt(0).toUpperCase()}</AvatarFallback>
+          <AvatarFallback>{fallbackInitial}</AvatarFallback>
         </Avatar>
         <div>
+          <Link to={`/channel/${channel._id}`} onClick={(e) => e.stopPropagation()}>
           <h2 className="font-semibold">{channel.name}</h2>
+          </Link>
           <p className="text-sm text-gray-500 mr-4"> {currentVideo?.uploader.subscriberCount || 0} subscribers</p>
         </div>
       </div>
@@ -48,7 +52,7 @@ const ChannelInfo = ({ channel, videoId }) => {
         <Button 
           onClick={handleSubscribe} 
           variant={isSubscribed ? 'secondary' : 'default'}
-          className="rounded-full"
+          className="rounded-full cursor-pointer"
         >
           {isSubscribed ? 'Subscribed' : 'Subscribe'}
         </Button>

@@ -12,6 +12,7 @@ import { fetchUserOnLoad, fetchWatchLater } from './store/authSlice'; // Import 
 import UploadPage from './pages/UploadPage';
 import WatchLaterPage from './pages/WatchLater';
 import YourVideosPage from './pages/YourVideosPage';
+import  ChannelPage  from './pages/ChannelPage';
 
 
 function App() {
@@ -43,6 +44,7 @@ const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
         <Route path="/upload-video" element={<UploadPage />} />
         <Route path="/feed/watch-later" element={<WatchLaterPage />} />
         <Route path="/your-videos" element={<YourVideosPage />} />
+        <Route path="/channel/:channelId" element={<ChannelPage />} />
 
       </Route>
       {/* Separate route without the MainLayout */}
