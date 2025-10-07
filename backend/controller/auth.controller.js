@@ -430,7 +430,7 @@ export const addToHistory = async (req, res, next) => {
             user.history = user.history.slice(0, 50); // Keep only the last 50 videos
         }
 
-        await user.save(); // Save the updated user document
+        await user.save({ validateBeforeSave: false }); // Added option to prevent potential validation issues
 
         return res.status(200).json(
             new APIResponse(200, user.history, "Video added to history successfully")
@@ -449,7 +449,7 @@ export const getHistory = async (req, res, next) => {
             path: 'history',
             populate: {
                 path: 'uploader',
-                select: 'username profileImg' // Select only username and profileImg fields from uploader
+                select: '_id username profileImg' // Select only username and profileImg fields from uploader
             },
         });
 

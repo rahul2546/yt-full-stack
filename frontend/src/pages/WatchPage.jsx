@@ -8,6 +8,7 @@ import { fetchVideoById } from '@/store/videoSlice';
 import { getVideoById } from '../api/videoService';
 import RecommendedVideos from '@/components/RecommendedVideos';
 import CommentsSection from '@/components/CommentsSection';
+import { addVideoToHistory } from '../api/userService';
 
 const WatchPage = () => {
   const { videoId } = useParams();
@@ -17,6 +18,7 @@ const WatchPage = () => {
   // Get all the video data, loading, and error states from the redux store
 
   const { currentVideo, loading, error} = useSelector((state) => state.video);
+   const { user } = useSelector((state) => state.auth); 
 
  // Fetch the video when the component mounts or the videoId changes
   useEffect(() => {
@@ -24,6 +26,18 @@ const WatchPage = () => {
       dispatch(fetchVideoById(videoId));
     }
   }, [dispatch, videoId]);
+
+  // Add video to history when currentVideo or user changes
+
+  useEffect(() => {
+    // Only add to history if we have a user and a current video
+
+    if (user && currentVideo) {
+      addVideoToHistory(currentVideo._id).catch((err) => {
+        console.error("Failed to add video to history:", err);
+      });
+    }
+  }, [currentVideo, user]);
 
  // Handle loading state and error state
   if (loading && !currentVideo) return <div className="p-4">Loading video...</div>;

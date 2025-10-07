@@ -13,6 +13,7 @@ import UploadPage from './pages/UploadPage';
 import WatchLaterPage from './pages/WatchLater';
 import YourVideosPage from './pages/YourVideosPage';
 import  ChannelPage  from './pages/ChannelPage';
+import HistoryPage from './pages/HistoryPage';
 
 
 function App() {
@@ -45,6 +46,7 @@ const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
         <Route path="/feed/watch-later" element={<WatchLaterPage />} />
         <Route path="/your-videos" element={<YourVideosPage />} />
         <Route path="/channel/:channelId" element={<ChannelPage />} />
+        <Route path="/feed/history" element={<HistoryPage />} /> 
 
       </Route>
       {/* Separate route without the MainLayout */}
