@@ -80,3 +80,13 @@ export const getChannelVideos = async (channelId) => {
     throw error;
   }
 };
+
+export const recordView = async (videoId) => {
+  try{
+    const response = await api.post(`video/incrementViews/${videoId}`);
+    return response.data;
+  }catch(error){
+    console.error("Error recording view:", error);
+    throw error;
+  }
+};

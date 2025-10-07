@@ -52,7 +52,7 @@ const WatchPage = () => {
     <div className="flex flex-col lg:flex-row gap-8 p-4">
       <div className="w-full lg:w-2/3 ">
         {/* Pass the fully constructed URL to the player */}
-        <VideoPlayer url={currentVideo.videoUrl} />
+        <VideoPlayer url={currentVideo.videoUrl} videoId={videoId} />
         
         <div className="mt-4">          
           <VideoDetails video={currentVideo} videoId={videoId} />  
