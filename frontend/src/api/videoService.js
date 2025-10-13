@@ -121,3 +121,19 @@ export const updateVideoDetails = async (videoId, videoData) =>{
     throw error;
   }
 }
+
+/**
+ * Deletes a video.
+ * @param {string} videoId - The ID of the video to delete.
+ * @returns {Promise<object>} The API response.
+ */
+
+export const deleteVideo = async (videoId) => {
+  try {
+    const response = await api.delete(`/video/${videoId}/delete`);
+    return response.data;  
+  } catch (error) {
+    console.error("Error deleting video:", error);
+    throw error;
+  }
+};

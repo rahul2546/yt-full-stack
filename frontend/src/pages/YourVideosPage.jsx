@@ -1,16 +1,29 @@
 // src/pages/YourVideosPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getChannelVideos } from '../api/videoService';
+import { getChannelVideos, deleteVideo } from '../api/videoService';
 import VideoCard from '@/components/VideoCard';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { toast } from 'sonner';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+
 
 const YourVideosPage = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [videoToDelete, setVideoToDelete] = useState(null);
 
   const { user } = useSelector((state) => state.auth);
 
@@ -34,6 +47,25 @@ const YourVideosPage = () => {
       setLoading(false);
     }
   }, [user]); // 5. Re-run this effect if the user object changes
+
+  const handleDeleteConfirm = async () => {
+    if (!videoToDelete) return;
+
+    try {
+      await deleteVideo(videoToDelete);
+      // Optimistically update the UI by removing the video from the local state
+      setVideos(currentVideos => currentVideos.filter(v => v._id !== videoToDelete));
+      toast.success("Video deleted successfully!");
+    } catch (error) {
+      toast.error("Failed to delete video.");
+    } finally {
+      setVideoToDelete(null); // Close the dialog
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setVideoToDelete(null);
+  };
 
 
   if (loading) return <div className="p-4">Loading your videos...</div>;
@@ -70,7 +102,7 @@ const YourVideosPage = () => {
                       <Pencil className="h-4 w-4" /> <span>Edit</span>
                     </Button>
                   </Link>
-                  <Button variant="destructive" size="sm" className="flex items-center gap-2">
+                  <Button variant="destructive" size="sm" className="flex items-center gap-2" onClick={() => setVideoToDelete(video._id)}>
                     <Trash2 className="h-4 w-4" /> <span>Delete</span>
                   </Button>
                 </div>
@@ -81,6 +113,21 @@ const YourVideosPage = () => {
           <p>You haven't uploaded any videos yet.</p>
         )}
       </div>
+      {/* Confirmation Dialog */}
+      <AlertDialog open={!!videoToDelete} onOpenChange={() => setVideoToDelete(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete your video and remove its data from our servers.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDeleteConfirm}>Continue</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
