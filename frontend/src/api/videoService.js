@@ -90,3 +90,34 @@ export const recordView = async (videoId) => {
     throw error;
   }
 };
+
+/**
+ * Updates a video's details.
+ * @param {string} videoId - The ID of the video to update.
+ * @param {object} videoData - the data to update.
+ * @returns {Promise<object>} The updated video object.
+ */
+
+export const updateVideoDetails = async (videoId, videoData) =>{
+  try {
+    const formData = new FormData();
+
+    // Append text fields if they exist in the data object
+    if(videoData.title) formData.append('title', videoData.title);
+    if(videoData.description) formData.append('description', videoData.description);
+
+    // Handle the thumbnail file if a new one was provided
+    if(videoData.thumbnail){
+      formData.append('thumbnail', videoData.thumbnail);
+    }
+
+    const response = await api.patch(`/video/${videoId}/update`, formData, {
+      headers: {
+        "Content-Type": 'multipart/form-data',
+      },
+    });
+  } catch (error) {
+    console.error("Error updating video details:", error);
+    throw error;
+  }
+}

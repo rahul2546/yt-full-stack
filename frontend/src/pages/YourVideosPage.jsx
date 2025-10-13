@@ -5,13 +5,14 @@ import VideoCard from '@/components/VideoCard';
 import { Button } from '@/components/ui/button';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const YourVideosPage = () => {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-   const { user } = useSelector((state) => state.auth);
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     // 3. Only run the fetch if the user ID exists
@@ -47,26 +48,28 @@ const YourVideosPage = () => {
             // --- THIS IS THE ADAPTER LOGIC ---
             // We transform the data to the shape our VideoCard expects
             const videoCardProps = {
-                id: video._id,
-                title: video.title,
-                thumbnailUrl: video.thumbnailUrl,
-                views: video.views,
-                postedAt: new Date(video.createdAt).toLocaleDateString(),
-                channel: {
-                    name: video.uploader.username,
-                    avatarUrl: video.uploader.profileImg || null,
-                }
+              id: video._id,
+              title: video.title,
+              thumbnailUrl: video.thumbnailUrl,
+              views: video.views,
+              postedAt: new Date(video.createdAt).toLocaleDateString(),
+              channel: {
+                name: video.uploader.username,
+                avatarUrl: video.uploader.profileImg || null,
+              }
             };
-            
+
             return (
               <div key={video._id} className="flex items-center gap-4 border-b pb-4">
                 <div className="flex-1">
                   <VideoCard video={videoCardProps} layout="list" />
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2">
-                  <Button variant="outline" size="sm" className="flex items-center gap-2">
-                    <Pencil className="h-4 w-4" /> <span>Edit</span>
-                  </Button>
+                  <Link to={`/edit-video/${video._id}`}>
+                    <Button variant="outline" size="sm" className="w-full flex items-center gap-2">
+                      <Pencil className="h-4 w-4" /> <span>Edit</span>
+                    </Button>
+                  </Link>
                   <Button variant="destructive" size="sm" className="flex items-center gap-2">
                     <Trash2 className="h-4 w-4" /> <span>Delete</span>
                   </Button>
