@@ -94,10 +94,12 @@ export const likeComment = async (req, res, next) => {
         }
 
         await comment.save();
+        const updatedComment = await Comment.findById(comment._id).populate('author', '_id username profileImg');
+
         return res
             .status(200)
             .json(
-                new APIResponse(200, comment, "Comment liked/unliked successfully")
+                new APIResponse(200, updatedComment, "Comment liked/unliked successfully")
             );
 
 
@@ -137,11 +139,12 @@ export const dislikeComment = async (req, res, next) => {
         }
 
         await comment.save();
+         const updatedComment = await Comment.findById(comment._id).populate('author', '_id username profileImg');
 
         return res
             .status(200)
             .json(
-                new APIResponse(200, comment, "Comment disliked/undisliked successfully")
+                new APIResponse(200, updatedComment , "Comment disliked/undisliked successfully")
             );
 
     } catch (error) {

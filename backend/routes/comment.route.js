@@ -25,7 +25,7 @@ router.get(
     getAllCommentsForVideo
 );
 
-// @route PATH /api/v1/videos/:videoId/comment/:commentId/like
+// @route PATCH /api/v1/videos/:videoId/comment/:commentId/like
 // @access Private
 
 router.patch(
@@ -34,7 +34,7 @@ router.patch(
     likeComment
 );
 
-// @route PATH /api/v1/videos/:videoId/comment/:commentId/dislike
+// @route PATCH /api/v1/videos/:videoId/comment/:commentId/dislike
 // @access Private
 
 router.patch(

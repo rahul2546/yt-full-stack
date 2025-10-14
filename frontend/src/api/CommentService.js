@@ -26,3 +26,26 @@ export const postComment = async (videoId, content) => {
     throw error.response?.data || error;
   }
 };
+
+export const toggleCommentLike = async (videoId, commentId) => {
+  try {
+    const response = await api.patch(`/videos/${videoId}/comment/${commentId}/like`);
+    return response.data.data; // The updated comment object
+    
+  } catch (error) {
+    console.error("Error toggling comment like:", error);
+    throw error;
+  }
+};
+
+export const toggleCommentDislike = async (videoId, commentId) => {
+  try {
+
+    const response = await api.patch(`videos/${videoId}/comment/${commentId}/dislike`);
+    return response.data.data; // The updated comment object
+    
+  } catch (error) {
+    console.error("Error toggling comment dislike:", error);
+    throw error;
+  }
+};

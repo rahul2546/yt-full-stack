@@ -4,6 +4,7 @@ import authReducer from './authSlice'; // Import the reducer from our auth slice
 import videoReducer from './videoSlice';
 import uploadReducer from './uploadSlice';
 import channelReducer from './channelSlice';
+import commentReducer from './commentSlice'; 
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     video: videoReducer,
     upload: uploadReducer,
     channel: channelReducer,
+    comments: commentReducer,
   },
 });
