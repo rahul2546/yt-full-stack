@@ -39,8 +39,10 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
           <Menu className="h-6 w-6" />
         </Button>
         <div className="flex items-center gap-2 cursor-pointer">
+          <Link to="/" className="flex items-center gap-2">
           <Youtube className="h-8 w-8 text-red-600" />
-          <span className="text-xl font-semibold">YouTube</span>
+          <span className="text-xl font-semibold hidden sm:block">YouTube</span>
+        </Link>
         </div>
       </div>
 

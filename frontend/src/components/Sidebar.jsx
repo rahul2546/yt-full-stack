@@ -5,7 +5,6 @@ import { Home, Flame, Video, History, Clapperboard, Library, ChevronDown, Clock 
 import { Link } from 'react-router-dom';
 
 const mainLinks = [
-  { icon: Home, text: 'Home' },
   { icon: Flame, text: 'Trending' },
   { icon: Clapperboard, text: 'Subscriptions' },
 ];
@@ -21,6 +20,15 @@ const Sidebar = ({ isOpen }) => {
     // The width changes based on the isOpen prop
     <aside className={`p-4 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
       <nav className="flex flex-col gap-2">
+        <Link to="/">
+          <Button
+            variant="ghost"
+            className="flex items-center justify-start gap-4 w-full"
+          >
+            <Home className="h-6 w-6" />
+            {isOpen && <span>Home</span>}
+          </Button>
+        </Link>
         {mainLinks.map((link) => (
           <Button
             key={link.text}

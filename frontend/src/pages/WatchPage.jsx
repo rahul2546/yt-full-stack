@@ -9,6 +9,7 @@ import { getVideoById } from '../api/videoService';
 import RecommendedVideos from '@/components/RecommendedVideos';
 import CommentsSection from '@/components/CommentsSection';
 import { addVideoToHistory } from '../api/userService';
+import WatchPageSkeleton from './WatchPageSkeleton'; 
 
 const WatchPage = () => {
   const { videoId } = useParams();
@@ -40,7 +41,7 @@ const WatchPage = () => {
   }, [currentVideo, user]);
 
  // Handle loading state and error state
-  if (loading && !currentVideo) return <div className="p-4">Loading video...</div>;
+  if (loading && !currentVideo) return <WatchPageSkeleton />;
   if (error && !currentVideo) return <div className="p-4 text-red-500">Error: {error}</div>;
   if (!currentVideo) {
     return <div className="p-4">Video not found.</div>;
