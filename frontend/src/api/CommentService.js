@@ -49,3 +49,13 @@ export const toggleCommentDislike = async (videoId, commentId) => {
     throw error;
   }
 };
+
+export const postReply = async (videoId, commentId, content) => {
+  try {
+    const response = await api.post(`/videos/${videoId}/comment/${commentId}/reply`,{ content });
+    return response.data;
+  } catch (error) {
+    console.error("Error posting reply:", error);
+    throw error;
+  }
+}
