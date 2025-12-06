@@ -5,7 +5,7 @@ let Backend_url
 if(import.meta.env.VITE_ENVIRONMENT === 'development'){
 	 Backend_url = 'http://localhost:5000/api/v1'
 }else{
-	Backend_url = import.meta.env.VITE_RENDER_BACKEND_URL
+	Backend_url = https://yt-backend-rt8g.onrender.com
 }
 
 const api = axios.create({
