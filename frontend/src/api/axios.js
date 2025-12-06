@@ -1,8 +1,18 @@
 import axios from 'axios';
 
+let Backend_url
+
+if(import.meta.env.VITE_ENVIRONMENT === 'development'){
+	 Backend_url = 'http://localhost:5000/api/v1'
+}else{
+	Backend_url = import.meta.env.VITE_RENDER_BACKEND_URL
+}
+
 const api = axios.create({
 	// Backend URL
-	baseURL: 'http://localhost:5000/api/v1'
+	
+	baseURL: Backend_url
+	
 });
 
 // Add a request interceptor to include the token in headers
