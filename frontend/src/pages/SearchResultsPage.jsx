@@ -2,7 +2,7 @@
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { mockVideos } from '../mockData'; // Adjust path
-import VideoCard from '@/components/VideoCard';
+import VideoCard from '@/components/VideoCard.jsx';
 
 const SearchResultsPage = () => {
   // 1. Get the search parameters from the URL
