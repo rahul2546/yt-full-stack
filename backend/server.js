@@ -20,7 +20,7 @@ const app = express();
 connectDB();
 
 //Middleware
- app.use(cors({ origin: 'https://yt-project-clone.netlify.app/', credentials: true }));
+ app.use(cors({ origin: 'https://yt-project-clone.netlify.app', credentials: true }));
 app.use(express.json()); // Parse JSON bodies 
 
 //Health check route
