@@ -20,7 +20,31 @@ const app = express();
 connectDB();
 
 //Middleware
-app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
+const allowedOrigins = [
+
+   'https://yt-project-clone.netlify.app/',
+  'http://localhost:5173' // For local development
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    // Check if the incoming origin is in our allowed list
+    // 'origin' will be undefined for same-origin requests or non-browser requests
+    if (allowedOrigins.indexOf(origin) !== -1 || !origin) {
+      callback(null, true); // Allow the request
+    } else {
+      callback(new Error('Not allowed by CORS')); // Deny the request
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true // Important if using cookies/sessions
+};
+
+// Apply the custom CORS options
+app.use(cors(corsOptions));
+
+// app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json()); // Parse JSON bodies 
 
 //Health check route
