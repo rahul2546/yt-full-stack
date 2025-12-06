@@ -1,6 +1,6 @@
 // src/store/commentSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getCommentsByVideoId, toggleCommentLike, toggleCommentDislike } from '@/api/CommentService';
+import { getCommentsByVideoId, toggleCommentLike, toggleCommentDislike } from '@/api/CommentService.js';
 
 // Thunks for fetching and interacting with comments
 export const fetchComments = createAsyncThunk('comments/fetchComments', async (videoId) => {

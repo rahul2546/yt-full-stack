@@ -1,15 +1,15 @@
 // src/pages/WatchPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import VideoPlayer from '@/components/VideoPlayer';
-import VideoDetails from '@/components/VideoDetails';
+import VideoPlayer from '@/components/VideoPlayer.jsx';
+import VideoDetails from '@/components/VideoDetails.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchVideoById } from '@/store/videoSlice';
-import { getVideoById } from '../api/videoService';
-import RecommendedVideos from '@/components/RecommendedVideos';
-import CommentsSection from '@/components/CommentsSection';
-import { addVideoToHistory } from '../api/userService';
-import WatchPageSkeleton from './WatchPageSkeleton'; 
+import { fetchVideoById } from '@/store/videoSlice.js';
+import { getVideoById } from '../api/VideoService.js';
+import RecommendedVideos from '@/components/RecommendedVideos.jsx';
+import CommentsSection from '@/components/CommentsSection.jsx';
+import { addVideoToHistory } from '../api/UserService.js';
+import WatchPageSkeleton from './WatchPageSkeleton.jsx'; 
 
 const WatchPage = () => {
   const { videoId } = useParams();

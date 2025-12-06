@@ -1,11 +1,11 @@
 // src/components/VideoCard.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar.jsx';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleWatchLaterVideo } from '@/store/authSlice';
+import { toggleWatchLaterVideo } from '@/store/authSlice.js';
 import { toast } from 'sonner';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.jsx';
 import { Clock, Check } from 'lucide-react';
 
 // TODO: the UI of watch later button needs to be fixed it is not in sync

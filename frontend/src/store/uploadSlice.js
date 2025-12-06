@@ -1,6 +1,6 @@
 // src/store/uploadSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { uploadVideo as uploadVideoService } from '../api/videoService';
+import { uploadVideo as uploadVideoService } from '../api/VideoService.js';
 
 // The async thunk for uploading a video
 export const uploadVideo = createAsyncThunk(

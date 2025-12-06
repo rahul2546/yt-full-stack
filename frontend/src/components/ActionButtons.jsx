@@ -1,12 +1,12 @@
 // src/components/ActionButtons.jsx
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.jsx';
 import { ThumbsUp, ThumbsDown, Share2, Download, Clock } from 'lucide-react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toggleVideoLike, toggleVideoDislike } from '@/store/videoSlice';
+import { toggleVideoLike, toggleVideoDislike } from '@/store/videoSlice.js';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
-import { toggleWatchLaterVideo } from '@/store/authSlice';
+import { toggleWatchLaterVideo } from '@/store/authSlice.js';
 
 const ActionButtons = ({ video }) => {
   const dispatch = useDispatch();

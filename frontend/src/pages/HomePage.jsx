@@ -1,9 +1,9 @@
 // src/pages/HomePage.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'; // 1. Import axios
-import VideoCard from '@/components/VideoCard';
-import { fetchAllVideos } from '@/api/videoService';
-import VideoCardSkeleton from '@/components/VideoCardSkeleton';
+import VideoCard from '@/components/VideoCard.jsx';
+import { fetchAllVideos } from '@/api/VideoService.js';
+import VideoCardSkeleton from '@/components/VideoCardSkeleton.jsx';
 
 const HomePage = () => {
   const [videos, setVideos] = useState([]);

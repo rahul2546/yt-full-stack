@@ -1,8 +1,8 @@
 // src/pages/YourVideosPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getChannelVideos, deleteVideo } from '../api/videoService';
-import VideoCard from '@/components/VideoCard';
-import { Button } from '@/components/ui/button';
+import { getChannelVideos, deleteVideo } from '../api/VideoService.js';
+import VideoCard from '@/components/VideoCard.jsx';
+import { Button } from '@/components/ui/button.jsx';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';

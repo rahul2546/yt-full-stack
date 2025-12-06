@@ -1,9 +1,9 @@
 // src/components/AddComment.jsx
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { postComment } from '../api/CommentService'; // Import our new function
+import { Button } from '@/components/ui/button.jsx';
+import { Input } from '@/components/ui/input.jsx';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar.jsx';
+import { postComment } from '../api/CommentService.js'; // Import our new function
 
 const AddComment = ({ videoId, onCommentPosted }) => {
   const [commentText, setCommentText] = useState('');

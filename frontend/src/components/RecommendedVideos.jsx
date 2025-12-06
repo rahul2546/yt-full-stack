@@ -1,7 +1,7 @@
 // src/components/RecommendedVideos.jsx
 import React from 'react';
-import VideoCard from './VideoCard';
-import { mockVideos } from '../mockData'; // Adjust path if needed
+import VideoCard from './VideoCard.jsx';
+import { mockVideos } from '../mockData.js'; // Adjust path if needed
 
 const RecommendedVideos = () => {
   // For now, we'll just show all mock videos. In a real app, you'd fetch related videos.

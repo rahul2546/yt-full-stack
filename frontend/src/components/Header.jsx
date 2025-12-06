@@ -1,12 +1,12 @@
 // src/components/Header.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button.jsx';
+import { Input } from '@/components/ui/input.jsx';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar.jsx';
 import { Menu, Youtube, Search, Video, Bell, Sun, Moon, LogIn } from 'lucide-react';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '@/store/authSlice';
+import { logout } from '@/store/authSlice.js';
 
 const Header = ({onMenuClick, theme, toggleTheme}) => {
 

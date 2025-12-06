@@ -1,10 +1,10 @@
 // src/components/CommentsSection.jsx
 import React, { useState, useEffect } from 'react';
-import { getCommentsByVideoId } from '../api/CommentService'; // Import our new service function
-import CommentList from './CommentList';
-import AddComment from './AddComment'; 
+//import { getCommentsByVideoId } from '../api/CommentService.jsx'; // Import our new service function
+import CommentList from './CommentList.jsx';
+import AddComment from './AddComment.jsx'; 
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchComments } from '../store/commentSlice';
+import { fetchComments } from '../store/commentSlice.js';
 
 const CommentsSection = ({ videoId }) => {
    const dispatch = useDispatch();

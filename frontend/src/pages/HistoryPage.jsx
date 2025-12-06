@@ -1,7 +1,7 @@
 // src/pages/HistoryPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getWatchHistory } from '../api/userService';
-import VideoCard from '@/components/VideoCard';
+import { getWatchHistory } from '../api/UserService.js';
+import VideoCard from '@/components/VideoCard.jsx';
 import { useSelector } from 'react-redux';
 
 const HistoryPage = () => {

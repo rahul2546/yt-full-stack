@@ -1,8 +1,8 @@
 // src/layouts/MainLayout.jsx
 import React, { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom'; // Important: Outlet is the placeholder for page content
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
+import Header from '@/components/Header.jsx';
+import Sidebar from '@/components/Sidebar.jsx';
 import { Toaster } from "@/components/ui/sonner"
 
 

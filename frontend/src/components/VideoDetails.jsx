@@ -1,8 +1,8 @@
 // src/components/VideoDetails.jsx
 import React from 'react';
-import ChannelInfo from './ChannelInfo';
-import ActionButtons from './ActionButtons';
-import DescriptionBox from './DescriptionBox';
+import ChannelInfo from './ChannelInfo.jsx';
+import ActionButtons from './ActionButtons.jsx';
+import DescriptionBox from './DescriptionBox.jsx';
 
 const VideoDetails = ({ video, videoId }) => {
    const channelData = {

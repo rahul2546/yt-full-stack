@@ -1,6 +1,6 @@
 // src/components/DescriptionBox.jsx
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.jsx';
 
 const DescriptionBox = ({ video }) => {
   const [isExpanded, setIsExpanded] = useState(false);

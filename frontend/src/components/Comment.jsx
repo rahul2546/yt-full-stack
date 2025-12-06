@@ -1,12 +1,12 @@
 // src/components/Comment.jsx
 import React, { useState } from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar.jsx';
+import { Button } from '@/components/ui/button.jsx';
 import { ThumbsUp, ThumbsDown, MessageSquareReply } from 'lucide-react';
-import CommentList from './CommentList'; // We will create this next
+import CommentList from './CommentList.jsx'; // We will create this next
 import { useDispatch, useSelector } from 'react-redux';
-import { likeComment, dislikeComment } from '../store/commentSlice';
-import { Input } from '@/components/ui/input'
+import { likeComment, dislikeComment } from '../store/commentSlice.js';
+import { Input } from '@/components/ui/input.jsx';
 
 const Comment = ({ comment, videoId }) => {
   const timeAgo = new Date(comment.createdAt).toLocaleDateString(); // Simple date for now

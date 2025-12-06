@@ -1,7 +1,7 @@
 // src/store/channelSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getChannelProfile } from '../api/channelService';
-import { toggleChannelSubscription } from './authSlice'; // Import the action we want to listen to
+import { getChannelProfile } from '../api/ChannelService.js';
+import { toggleChannelSubscription } from './authSlice.js'; // Import the action we want to listen to
 
 export const fetchChannelById = createAsyncThunk(
   'channel/fetchById',

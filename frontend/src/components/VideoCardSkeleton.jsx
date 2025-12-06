@@ -1,6 +1,6 @@
 // src/components/VideoCardSkeleton.jsx
 import React from 'react';
-import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton.jsx";
 
 const VideoCardSkeleton = () => {
   return (

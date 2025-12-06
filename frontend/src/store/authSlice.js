@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { loginUser, registerUser, getCurrentUser } from '../api/authService';
-import { toggleSubscription } from '@/api/subscriptionService';
-import { fetchVideoById } from './videoSlice';
-import { getWatchLaterVideos, toggleWatchLater } from '@/api/userService';
+import { loginUser, registerUser, getCurrentUser } from '../api/AuthService.js';
+import { toggleSubscription } from '@/api/SubscriptionService.js';
+import { fetchVideoById } from './videoSlice.js';
+import { getWatchLaterVideos, toggleWatchLater } from '@/api/UserService.js';
 
 // Async thunk for logging in user
 export const login = createAsyncThunk(

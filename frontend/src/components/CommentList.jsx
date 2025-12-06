@@ -1,6 +1,6 @@
 // src/components/CommentList.jsx
 import React from 'react';
-import Comment from './Comment';
+import Comment from './Comment.jsx';
 
 const CommentList = ({ comments, videoId }) => {
   return (

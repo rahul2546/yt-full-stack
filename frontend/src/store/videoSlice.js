@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, current } from "@reduxjs/toolkit";
-import { getVideoById, toggleLike, toggleDislike, recordView } from "@/api/videoService";
+import { getVideoById, toggleLike, toggleDislike, recordView } from "@/api/VideoService.js";
 
 
 // Async thunk to fetch video details by ID

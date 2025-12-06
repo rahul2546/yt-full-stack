@@ -1,7 +1,7 @@
 // src/components/VideoPlayer.jsx
 import React from 'react';
 import { useDispatch } from 'react-redux';
-import { incrementViewCount } from '@/store/videoSlice';
+import { incrementViewCount } from '@/store/videoSlice.js';
 
 
 const VideoPlayer = ({ url, videoId }) => {

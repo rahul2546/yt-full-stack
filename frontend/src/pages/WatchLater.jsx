@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchWatchLater } from '@/store/authSlice';
-import VideoCard from '@/components/VideoCard';
+import { fetchWatchLater } from '@/store/authSlice.js';
+import VideoCard from '@/components/VideoCard.jsx';
 
 const WatchLaterPage = () => {
 	  const dispatch = useDispatch();

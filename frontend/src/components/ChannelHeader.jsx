@@ -1,6 +1,6 @@
 // src/components/ChannelHeader.jsx
 import React from 'react';
-import ChannelInfo from './ChannelInfo';
+import ChannelInfo from './ChannelInfo.jsx';
 
 const ChannelHeader = ({ channel }) => {
   return (

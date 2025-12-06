@@ -1,7 +1,7 @@
 // src/pages/WatchPageSkeleton.jsx
 import React from 'react';
-import { Skeleton } from "@/components/ui/skeleton";
-import VideoCardListSkeleton from '@/components/VideoCardListSkeleton';
+import { Skeleton } from "@/components/ui/skeleton.jsx";
+import VideoCardListSkeleton from '@/components/VideoCardListSkeleton.jsx';
 
 const WatchPageSkeleton = () => {
   return (

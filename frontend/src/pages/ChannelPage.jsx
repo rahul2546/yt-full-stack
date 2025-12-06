@@ -2,10 +2,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchChannelById } from '../store/channelSlice';
-import { getChannelVideos } from '../api/videoService';
-import ChannelHeader from '@/components/ChannelHeader';
-import VideoCard from '@/components/VideoCard';
+import { fetchChannelById } from '../store/channelSlice.js';
+import { getChannelVideos } from '../api/VideoService.js';
+import ChannelHeader from '@/components/ChannelHeader.jsx';
+import VideoCard from '@/components/VideoCard.jsx';
 
 // TODO : the subscription count is not updating when you subscribe from this page. Fix it.
 

@@ -1,10 +1,10 @@
 // src/components/ChannelInfo.jsx
 import React from 'react';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
-import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar.jsx';
+import { Button } from '@/components/ui/button.jsx';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate, Link } from 'react-router-dom';
-import { toggleChannelSubscription } from '@/store/authSlice';
+import { toggleChannelSubscription } from '@/store/authSlice.js';
 
 
 const ChannelInfo = ({ channel, videoId }) => {

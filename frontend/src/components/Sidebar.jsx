@@ -1,6 +1,6 @@
 // src/components/Sidebar.jsx
 import React from 'react';
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/button.jsx';
 import { Home, Flame, Video, History, Clapperboard, Library, ChevronDown, Clock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 

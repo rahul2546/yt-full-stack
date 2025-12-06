@@ -1,7 +1,7 @@
 // src/pages/SearchResultsPage.jsx
 import React from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { mockVideos } from '../mockData'; // Adjust path
+import { mockVideos } from '../mockData.js'; // Adjust path
 import VideoCard from '@/components/VideoCard.jsx';
 
 const SearchResultsPage = () => {

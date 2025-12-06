@@ -1,20 +1,20 @@
 // src/App.jsx
 import { Routes, Route } from 'react-router-dom';
-import MainLayout from './layouts/MainLayout'; // Import the new layout
-import HomePage from './pages/HomePage';
-import WatchPage from './pages/WatchPage';
-import SearchResultsPage from './pages/SearchResultsPage';
-import LoginPage from './pages/LoginPage';
-import RegisterPage from './pages/RegisterPage';
+import MainLayout from './layouts/MainLayout.jsx'; // Import the new layout
+import HomePage from './pages/HomePage.jsx';
+import WatchPage from './pages/WatchPage.jsx';
+import SearchResultsPage from './pages/SearchResultsPage.jsx';
+import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchUserOnLoad, fetchWatchLater } from './store/authSlice'; // Import the thunk action
-import UploadPage from './pages/UploadPage';
-import WatchLaterPage from './pages/WatchLater';
-import YourVideosPage from './pages/YourVideosPage';
-import  ChannelPage  from './pages/ChannelPage';
-import HistoryPage from './pages/HistoryPage';
-import EditVideoPage from './pages/EditVideoPage';
+import { fetchUserOnLoad, fetchWatchLater } from './store/authSlice.js'; // Import the thunk action
+import UploadPage from './pages/UploadPage.jsx';
+import WatchLaterPage from './pages/WatchLater.jsx';
+import YourVideosPage from './pages/YourVideosPage.jsx';
+import  ChannelPage  from './pages/ChannelPage.jsx';
+import HistoryPage from './pages/HistoryPage.jsx';
+import EditVideoPage from './pages/EditVideoPage.jsx';
 
 
 function App() {
