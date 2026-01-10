@@ -20,7 +20,26 @@ const app = express();
 connectDB();
 
 //Middleware
-app.use(cors({ origin: 'https://yt-project-clone.netlify.app', credentials: true }));
+const server_env = process.env.NODE_ENV;
+if(server_env === 'development'){
+app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+}else{
+
+app.use(cors({
+  origin: "https://yt-project-clone.netlify.app",
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
+app.options("/upload", cors()); // allow preflight
+
+app.use((req, res, next) => {
+  console.log("Incoming:", req.method, req.url);
+  next();
+});
+}
+
+
 app.use(express.json()); // Parse JSON bodies 
 
 //Health check route

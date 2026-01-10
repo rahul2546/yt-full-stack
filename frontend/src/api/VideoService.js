@@ -9,9 +9,9 @@ import api from './axios';
 export const uploadVideo = async (formData, onUploadProgress) => {
   try {
     const response = await api.post('/video/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
+      // headers: {
+      //   'Content-Type': 'multipart/form-data',
+      // },
       onUploadProgress: (progressEvent) => {
         const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total);
         onUploadProgress(percentCompleted);
