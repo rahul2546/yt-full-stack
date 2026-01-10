@@ -42,7 +42,7 @@ return (
               <Input
                 id="email"
                 type="email"
-                placeholder="naina1@gmail.com"
+                placeholder="Enter your email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -53,6 +53,7 @@ return (
               <Input
                 id="password"
                 type="password"
+                placeholder="Enter your password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}

@@ -71,6 +71,7 @@ export const uploadVideo = async (req, res, next) => {
 
     } catch (error) {
         next(new APIError(500, error.message));
+        console.log(error);
 
     }
 };
