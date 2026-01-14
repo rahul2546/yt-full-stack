@@ -43,7 +43,7 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
         <div className="flex items-center gap-2 cursor-pointer ">
           <Link to="/" className="flex items-center gap-2">
           <Youtube className="h-8 w-8 text-red-600" />
-          <span className="text-xl font-semibold mr-18 ml-1 mb-1 ">YouTube</span>
+          <span className="text-xl font-semibold mr-13 ml-1 mb-1 ">YouTube</span>
         </Link>
         </div>
       </div>
