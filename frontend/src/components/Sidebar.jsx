@@ -18,7 +18,7 @@ const libraryLinks = [
 const Sidebar = ({ isOpen }) => {
   return (
     // The width changes based on the isOpen prop
-    <aside className={`p-4 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'}`}>
+    <aside className={`p-4 transition-all duration-300 ${isOpen ? 'w-64' : 'w-20'} hidden md:block sticky top-16 h-[calc(100vh-64px)] overflow-y-auto`}>
       <nav className="flex flex-col gap-2">
         <Link to="/">
           <Button

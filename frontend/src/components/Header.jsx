@@ -31,17 +31,19 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
     navigate('/'); // Redirect to homepage after logout 
   }
 
+  // TODO: will add a bottom header for mobile screens later
+
   return (
     <header className="flex justify-between items-center p-4 border-b">
       {/* Left Section */}
       <div className="flex items-center gap-4">
         <Button variant="ghost" size="icon" onClick={onMenuClick}>
-          <Menu className="h-6 w-6" />
+          <Menu className="h-6 w-6 hidden sm:block" />
         </Button>
-        <div className="flex items-center gap-2 cursor-pointer">
+        <div className="flex items-center gap-2 cursor-pointer ">
           <Link to="/" className="flex items-center gap-2">
           <Youtube className="h-8 w-8 text-red-600" />
-          <span className="text-xl font-semibold hidden sm:block">YouTube</span>
+          <span className="text-xl font-semibold mr-45 ml-2 mb-1 ">YouTube</span>
         </Link>
         </div>
       </div>
@@ -51,40 +53,40 @@ const Header = ({onMenuClick, theme, toggleTheme}) => {
         <Input
           type="search"
           placeholder="Search"
-          className="rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0 border-r-0"
+          className="rounded-r-none focus-visible:ring-0 focus-visible:ring-offset-0 border-r-0 hidden md:flex"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <Button type="submit" variant="outline" className="rounded-l-none border-l-0">
+        <Button type="submit" variant="outline" className="border-0 md:border-2 rounded-l-none border-l-0">
           <Search className="h-6 w-6" />
         </Button>
       </form>
 
       {/* Right Section */}
       <div className="flex items-center gap-4">
-		 <Button onClick={toggleTheme} variant="ghost" size="icon">
-          {theme === 'light' ? <Moon className="h-6 w-6" /> : <Sun className="h-6 w-6" />}
+		 <Button onClick={toggleTheme} variant="ghost" size="icon" className="hidden sm:block">
+          {theme === 'light' ? <Moon className="h-6 w-6 " /> : <Sun className="h-6 w-6" />}
         </Button>
         {isAuthenticated ? (
           <>
         <Link to="/upload-video">
       <Button variant="ghost" size="icon">
-        <Video className="h-6 w-6" />
+        <Video className="h-6 w-6 hidden sm:block" />
       </Button>
         </Link>
         <Button variant="ghost" size="icon">
-          <Bell className="h-6 w-6" />
+          <Bell className="h-6 w-6 hidden sm:block" />
         </Button>
-        <Avatar>
+        <Avatar className="hidden sm:block">
           <AvatarImage src="https://github.com/shadcn.png" alt="User Avatar" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
-         <Button onClick={handleLogout} variant="outline">Logout</Button>
+         <Button onClick={handleLogout} variant="outline" className="hidden sm:block">Logout</Button>
           </>
         ) : (
           <Link to="/login">
-             <Button variant="outline" className="flex items-center gap-2">
-              <LogIn className="h-5 w-5" />
+             <Button variant="outline" className="flex items-center gap-2 text-sm">
+              <LogIn className="h-5 w-5 text-sm" />
               Sign In
             </Button>
           </Link>
